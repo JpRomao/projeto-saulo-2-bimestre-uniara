@@ -51,14 +51,5 @@ double cadastraSalario()
 
 int main()
 {
-  char nome[20] = "";
-  strcpy(nome, cadastraNome());
-  int idade = cadastraIdade();
-  double salario = cadastraSalario();
-
-  printf("nome:%s\n", nome);
-  printf("idade:%d\n", idade);
-  printf("salario:%lf\n", salario);
-
   return 0;
 }
