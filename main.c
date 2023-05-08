@@ -10,6 +10,18 @@ typedef struct Funcionario
   int idade;
 } Reg;
 
+void limparBuffer()
+{
+  while (getchar() != '\n' && getchar() != '\r')
+  {
+  }
+}
+
+void limparFgets(char *string)
+{
+  string[strcspn(string, "\r\n")] = '\0';
+}
+
 char *cadastraNome()
 {
 
@@ -17,7 +29,7 @@ char *cadastraNome()
 
   printf("Digite o nome do funcionario: ");
   fgets(nome, 20, stdin);
-  nome[strcspn(nome, "\r\n")] = 0;
+  limparFgets(nome);
 
   return nome;
 }
@@ -30,6 +42,7 @@ int cadastraIdade()
   {
     printf("Digite a idade do funcionario: ");
     scanf("%d", &idade);
+    limparBuffer();
 
     if (idade <= 0)
     {
@@ -45,6 +58,7 @@ double cadastraSalario()
 
   printf("Digite o salario do funcionario: ");
   scanf("%lf", &salario);
+  limparBuffer();
 
   return salario;
 }
@@ -55,6 +69,8 @@ int cadastraCategoria()
 
   printf("Digite a qual categoria o funcionario sera classificado\n 1- Gerencia\n 2- Supervisao\n 3- Operacional\n R:  ");
   scanf("%d", &categoria);
+  limparBuffer();
+
   switch (categoria)
   {
   case 1:
