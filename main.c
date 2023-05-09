@@ -86,6 +86,24 @@ int cadastraCategoria()
   return categoria;
 }
 
+char *nomeCategoria(int categoria)
+{
+  switch (categoria)
+  {
+  case 1:
+    return "Gerencia";
+
+  case 2:
+    return "Supervisao";
+
+  case 3:
+    return "Operacional";
+
+  default:
+    return "invalida";
+  }
+}
+
 Reg criarFuncionario()
 {
   Reg funcionario;
@@ -106,7 +124,7 @@ int main()
 
   printf("\n--------- Funcionario Cadastrado ----------\n");
   printf("Nome: %s\n", funcionario.nome);
-  printf("Categoria: %d\n", funcionario.categoria);
+  printf("Categoria: %s\n", nomeCategoria(funcionario.categoria));
   printf("Salario: %.2lf\n", funcionario.salario);
   printf("Idade: %d\n", funcionario.idade);
 
