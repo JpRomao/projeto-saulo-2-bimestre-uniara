@@ -109,7 +109,7 @@ void menuPrincipal(Reg *funcionarios)
       break;
 
     default:
-      printf("Opcao invalida! Digite novamente.\n");
+      printf("Opcao invalida!\n");
       break;
     }
   } while (opcao != 6);
