@@ -22,6 +22,7 @@ RF
 RNF
 [x] - Todas as listagens devem ser paginadas com 20 itens por página
 [x] - Todas as listagens devem ser ordenadas por nome
+[x] - Ao procurar por nome, deve ser possível procurar por parte do nome
 
 Regras de negócio
 [x] - O funcionário não pode ter um id duplicado
