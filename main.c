@@ -29,7 +29,9 @@ void limparBuffer();
 void limparFgets(char *string);
 void gerarFuncionariosAleatorios(Reg *funcionarios);
 void menuPrincipal(Reg *funcionarios);
+void informacoesFuncionario();
 void listarFuncionarios(Reg *funcionarios, int pagina, int final);
+void mostrarFuncionario(Reg funcionario);
 void menu();
 int numeroFuncionariosRegistrados(Reg *funcionarios);
 int gerarId();
@@ -159,6 +161,22 @@ void menu()
   printf("11- Sair\n");
 }
 
+void informacoesFuncionario()
+{
+  printf("ID\t\tNOME\t\t\tSALARIO\t\tCATEGORIA\tIDADE\n");
+}
+
+void mostrarFuncionario(Reg funcionario)
+{
+  informacoesFuncionario();
+  printf("%d\t\t%s\t\t\t%.2f\t\t%s\t\t%d\n",
+         funcionario.id,
+         funcionario.nome,
+         funcionario.salario,
+         nomeCategoria(funcionario.categoria),
+         funcionario.idade);
+}
+
 Reg criarFuncionarioAleatorio(Reg *funcionarios)
 {
   Reg novoFuncionario;
@@ -187,7 +205,7 @@ void listarFuncionarios(Reg *funcionarios, int pagina, int final)
 
   printf("Pagina %d\n\n", pagina + 1);
 
-  printf("ID\t\tNome\t\tCategoria\t\tSalario\t\tIdade\n");
+  informacoesFuncionario();
 
   for (int i = pagina * LIMITE_LISTAGEM; i < final; i++)
   {
