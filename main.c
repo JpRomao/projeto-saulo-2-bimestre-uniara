@@ -39,6 +39,7 @@ int numeroFuncionariosRegistrados(Reg *funcionarios);
 int gerarId();
 int cadastraIdade();
 int cadastraCategoria();
+int simOuNao();
 char *cadastraNome();
 char *nomeCategoria(int categoria);
 double cadastraSalario();
@@ -81,13 +82,13 @@ void menuPrincipal(Reg *funcionarios)
       break;
 
     case 3:
-      // buscarFuncionario(funcionarios);
+      // buscarFuncionario(funcionarios, nomeFuncionario);
       break;
     case 4:
-      // alterarFuncionario(funcionarios);
+      // alterarFuncionario(funcionarios, idFuncionario);
       break;
     case 5:
-      // deletarFuncionario(funcionarios);
+      deletarFuncionario(funcionarios);
       break;
     case 6:
       // totalSalariosPorCategoria(funcionarios);
@@ -148,6 +149,89 @@ void ordenarPorNome(Reg *funcionarios)
         funcionarios[j] = aux;
       }
     }
+  }
+}
+
+void deletarFuncionario(Reg *funcionarios)
+{
+  int idFuncionario = 0;
+
+  printf("Digite o id do funcionario que deseja deletar: ");
+  scanf("%d", &idFuncionario);
+  limparBuffer();
+
+  if (idFuncionario == 0)
+  {
+    printf("Id invalido! Deseja tentar novamente?\n");
+
+    int opcao = simOuNao();
+
+    if (opcao == 1)
+    {
+      return deletarFuncionario(funcionarios);
+    }
+    else
+    {
+      return;
+    }
+  }
+
+  int numeroFuncionarios = numeroFuncionariosRegistrados(funcionarios);
+
+  int i = 0;
+
+  printf("Encontrando funcionario...");
+
+  while (funcionarios[i].id != idFuncionario)
+  {
+    i++;
+
+    if (i == numeroFuncionarios)
+    {
+      printf("Funcionario nao encontrado! Deseja tentar novamente?\n");
+
+      int opcao = simOuNao();
+
+      if (opcao == 1)
+      {
+        return deletarFuncionario(funcionarios);
+      }
+      else
+      {
+        return;
+      }
+    }
+  }
+
+  funcionarios[i].categoria = 0;
+  funcionarios[i].idade = 0;
+  funcionarios[i].id = 0;
+  funcionarios[i].salario = 0.0;
+  strcpy(funcionarios[i].nome, "");
+}
+
+int simOuNao()
+{
+  int opcao;
+
+  printf("1 - Sim\n");
+  printf("2 - Nao\n");
+
+  scanf("%d", &opcao);
+
+  if (opcao == 1)
+  {
+    return 1;
+  }
+  else if (opcao == 2)
+  {
+    return 0;
+  }
+  else
+  {
+    printf("Opcao invalida!\n");
+
+    return simOuNao();
   }
 }
 
@@ -247,17 +331,14 @@ void listarFuncionarios(Reg *funcionarios, int pagina, int final)
            funcionarios[i].idade);
   }
 
-  int opcao;
+  int usuarioDesejaIrParaProximaPagina;
 
   do
   {
     printf("Há mais funcionários, deseja ir para próxima página?\n");
-    printf("1- Sim\n");
-    printf("2- Nao\n");
-    scanf("%d", &opcao);
-    limparBuffer();
+    usuarioDesejaIrParaProximaPagina = simOuNao();
 
-    switch (opcao)
+    switch (usuarioDesejaIrParaProximaPagina)
     {
     case 1:
       listarFuncionarios(funcionarios, pagina + 1, final + LIMITE_LISTAGEM);
@@ -267,7 +348,7 @@ void listarFuncionarios(Reg *funcionarios, int pagina, int final)
     default:
       printf("Opcao invalida! Digite novamente.\n");
     }
-  } while (opcao != 1 && opcao != 2);
+  } while (usuarioDesejaIrParaProximaPagina != 1 && usuarioDesejaIrParaProximaPagina != 2);
 }
 
 Reg criarFuncionario()
