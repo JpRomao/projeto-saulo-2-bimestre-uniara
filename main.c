@@ -35,6 +35,7 @@ void listarFuncionarios(Reg *funcionarios, int pagina, int final);
 void mostrarFuncionario(Reg funcionario);
 void menu();
 void ordenarPorNome(Reg *funcionarios);
+void deletarFuncionario(Reg *funcionarios);
 int numeroFuncionariosRegistrados(Reg *funcionarios);
 int gerarId();
 int cadastraIdade();
@@ -203,11 +204,27 @@ void deletarFuncionario(Reg *funcionarios)
     }
   }
 
-  funcionarios[i].categoria = 0;
-  funcionarios[i].idade = 0;
-  funcionarios[i].id = 0;
-  funcionarios[i].salario = 0.0;
-  strcpy(funcionarios[i].nome, "");
+  printf("Funcionario encontrado!\n");
+
+  printf("Deseja realmente deletar o funcionario %s?\n", funcionarios[i].nome);
+
+  int opcao = simOuNao();
+
+  if (opcao == 1)
+  {
+    for (int j = i; j < numeroFuncionarios; j++)
+    {
+      funcionarios[j] = funcionarios[j + 1];
+    }
+
+    funcionarios = realloc(funcionarios, (numeroFuncionarios - 1) * sizeof(Reg));
+
+    printf("Funcionario deletado com sucesso!\n");
+  }
+  else
+  {
+    printf("Funcionario nao deletado!\n");
+  }
 }
 
 int simOuNao()
@@ -216,8 +233,8 @@ int simOuNao()
 
   printf("1 - Sim\n");
   printf("2 - Nao\n");
-
   scanf("%d", &opcao);
+  limparBuffer();
 
   if (opcao == 1)
   {
