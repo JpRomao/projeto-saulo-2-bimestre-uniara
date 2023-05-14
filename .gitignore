@@ -4,3 +4,4 @@ main
 .env
 .vscode
 *.log
+**/output/**

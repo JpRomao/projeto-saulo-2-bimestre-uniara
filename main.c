@@ -2,24 +2,242 @@
 #include <string.h>
 #include <stdlib.h>
 
+#define ENVIRONMENT 'TEST'
+#define LIMITE_LISTAGEM 1
+
 typedef struct Funcionario
 {
+  int id;
   char nome[20];
   double salario;
   int categoria;
   int idade;
 } Reg;
 
-void limparBuffer()
+int quantidadeFuncionarios = 0;
+
+void limparBuffer();
+void limparFgets(char *string);
+void gerarTresFuncionariosAleatorios(Reg *funcionarios);
+void menuPrincipal(Reg *funcionarios);
+void listarFuncionarios(Reg *funcionarios, int pagina, int final);
+void menu();
+int numeroFuncionariosRegistrados(Reg *funcionarios);
+int gerarId();
+int cadastraIdade();
+int cadastraCategoria();
+char *cadastraNome();
+char *nomeCategoria(int categoria);
+double cadastraSalario();
+Reg adicionarFuncionario(Reg *funcionarios, Reg novoFuncionario);
+Reg criarFuncionario();
+Reg criarFuncionarioAleatorio(Reg *funcionarios);
+
+int main()
 {
-  while (getchar() != '\n' && getchar() != '\r')
+  Reg *funcionarios = malloc(1 * sizeof(Reg));
+
+  if (ENVIRONMENT == 'TEST')
   {
+    gerarTresFuncionariosAleatorios(funcionarios);
+  }
+
+  menuPrincipal(funcionarios);
+
+  free(funcionarios);
+
+  return 0;
+}
+
+Reg adicionarFuncionario(Reg *funcionarios, Reg novoFuncionario)
+{
+  int size = numeroFuncionariosRegistrados(funcionarios);
+
+  funcionarios = realloc(funcionarios, (size + 1) * sizeof(Reg));
+
+  funcionarios[size] = novoFuncionario;
+
+  return *funcionarios;
+}
+
+void menuPrincipal(Reg *funcionarios)
+{
+  int opcao;
+
+  do
+  {
+    menu();
+    scanf("%d", &opcao);
+    limparBuffer();
+
+    switch (opcao)
+    {
+    case 1:
+      adicionarFuncionario(funcionarios, criarFuncionario());
+      break;
+
+    case 2:
+      int pagina = 0;
+
+      int numeroFuncionarios = numeroFuncionariosRegistrados(funcionarios);
+
+      int final = numeroFuncionariosRegistrados;
+
+      if (numeroFuncionarios > (pagina + 1) * LIMITE_LISTAGEM)
+      {
+        final = (pagina + 1) * LIMITE_LISTAGEM;
+      }
+
+      listarFuncionarios(funcionarios, pagina, final);
+      break;
+
+    case 3:
+      // buscarFuncionario(funcionarios);
+      break;
+    case 4:
+      // alterarFuncionario(funcionarios);
+      break;
+    case 5:
+      // deletarFuncionario(funcionarios);
+      break;
+    case 6:
+      // totalSalariosPorCategoria(funcionarios);
+      break;
+    case 7:
+      // maiorMenorSalarioPorCategoria(funcionarios);
+      break;
+    case 8:
+      // mediaIdadePorCategoria(funcionarios);
+      break;
+    case 9:
+      // quantidadeFuncionariosPorSalario(funcionarios);
+      break;
+    case 10:
+      // nomeFuncionarioMaisNovo(funcionarios);
+      break;
+    case 11:
+      printf("Saindo...\n");
+      break;
+
+    default:
+      printf("Opcao invalida! Digite novamente.\n");
+      break;
+    }
+  } while (opcao != 6);
+}
+
+void gerarTresFuncionariosAleatorios(Reg *funcionarios)
+{
+  for (int i = 0; i < 3; i++)
+  {
+    adicionarFuncionario(funcionarios, criarFuncionarioAleatorio(funcionarios));
   }
 }
 
-void limparFgets(char *string)
+void menu()
 {
-  string[strcspn(string, "\r\n")] = '\0';
+  printf("Escolha uma opcao:\n");
+  printf("1- Cadastrar funcionario\n");
+  printf("2- Listar funcionarios\n");
+  printf("3- Buscar funcionario por nome\n");
+  printf("4- Alterar dados de um funcionario\n");
+  printf("5- Deletar funcionario por id\n");
+  printf("6- Total de salarios por categoria\n");
+  printf("7- Maior e menor salario por categoria\n");
+  printf("8- Media de idade por categoria\n");
+  printf("9- Quantidade de funcionarios por salario\n");
+  printf("10- Nome do funcionario mais novo\n");
+  printf("11- Sair\n");
+}
+
+Reg criarFuncionarioAleatorio(Reg *funcionarios)
+{
+  Reg novoFuncionario;
+
+  int numeroDeFuncionarios = numeroDeFuncionariosRegistrados(funcionarios);
+
+  int categoriaAleatoria = rand() % 3 + 1;
+  double salarioAleatorio = rand() % 100000 + 1000;
+  int idadeAleatoria = rand() % 60 + 18;
+
+  strcpy(novoFuncionario.nome, "Funcionario " + (numeroDeFuncionarios + 1));
+  novoFuncionario.categoria = categoriaAleatoria;
+  novoFuncionario.salario = salarioAleatorio;
+  novoFuncionario.idade = idadeAleatoria;
+
+  return novoFuncionario;
+}
+
+void listarFuncionarios(Reg *funcionarios, int pagina, int final)
+{
+  printf("Pagina %d\n\n", pagina + 1);
+
+  printf("ID\t\tNome\t\tCategoria\t\tSalario\t\tIdade\n");
+
+  for (int i = pagina * LIMITE_LISTAGEM; i < final; i++)
+  {
+    printf("%d\t%s\t\t%s\t\t%.2lf\t\t%d\n",
+           funcionarios[i].id,
+           funcionarios[i].nome,
+           nomeCategoria(funcionarios[i].categoria),
+           funcionarios[i].salario,
+           funcionarios[i].idade);
+  }
+
+  int opcao;
+
+  do
+  {
+    printf("Há mais funcionários, deseja ir para próxima página?\n");
+    printf("1- Sim\n");
+    printf("2- Nao\n");
+    scanf("%d", &opcao);
+    limparBuffer();
+
+    switch (opcao)
+    {
+    case 1:
+      listarFuncionarios(funcionarios, pagina + 1, final + LIMITE_LISTAGEM);
+      break;
+    case 2:
+      break;
+    default:
+      printf("Opcao invalida! Digite novamente.\n");
+    }
+  } while (opcao != 1 && opcao != 2);
+}
+
+Reg criarFuncionario()
+{
+  Reg funcionario;
+
+  funcionario.id = gerarId();
+  strcpy(funcionario.nome, cadastraNome());
+  funcionario.categoria = cadastraCategoria();
+  funcionario.salario = cadastraSalario();
+  funcionario.idade = cadastraIdade();
+
+  printf("Funcionario criado com sucesso!\n");
+
+  return funcionario;
+}
+
+char *nomeCategoria(int categoria)
+{
+  switch (categoria)
+  {
+  case 1:
+    return "Gerencia";
+
+  case 2:
+    return "Supervisao";
+
+  case 3:
+    return "Operacional";
+
+  default:
+    return "invalida";
+  }
 }
 
 char *cadastraNome()
@@ -32,24 +250,6 @@ char *cadastraNome()
   limparFgets(nome);
 
   return nome;
-}
-
-int cadastraIdade()
-{
-  int idade;
-
-  do
-  {
-    printf("Digite a idade do funcionario: ");
-    scanf("%d", &idade);
-    limparBuffer();
-
-    if (idade <= 0)
-    {
-      printf("A idade digitada eh invalida! Digite novamente.\n");
-    }
-  } while (idade <= 0);
-  return idade;
 }
 
 double cadastraSalario()
@@ -86,47 +286,51 @@ int cadastraCategoria()
   return categoria;
 }
 
-char *nomeCategoria(int categoria)
+int cadastraIdade()
 {
-  switch (categoria)
+  int idade;
+
+  do
   {
-  case 1:
-    return "Gerencia";
+    printf("Digite a idade do funcionario: ");
+    scanf("%d", &idade);
+    limparBuffer();
 
-  case 2:
-    return "Supervisao";
+    if (idade <= 0)
+    {
+      printf("A idade digitada eh invalida! Digite novamente.\n");
+    }
+  } while (idade <= 0);
+  return idade;
+}
 
-  case 3:
-    return "Operacional";
+int numeroFuncionariosRegistrados(Reg *funcionarios)
+{
+  int i = 0;
 
-  default:
-    return "invalida";
+  while (funcionarios[i].nome != '\0')
+  {
+    i++;
   }
+
+  return i;
 }
 
-Reg criarFuncionario()
+int gerarId()
 {
-  Reg funcionario;
+  quantidadeFuncionarios++;
 
-  strcpy(funcionario.nome, cadastraNome());
-  funcionario.categoria = cadastraCategoria();
-  funcionario.salario = cadastraSalario();
-  funcionario.idade = cadastraIdade();
-
-  printf("Funcionario criado com sucesso!\n");
-
-  return funcionario;
+  return quantidadeFuncionarios;
 }
 
-int main()
+void limparFgets(char *string)
 {
-  Reg funcionario = criarFuncionario();
+  string[strcspn(string, "\r\n")] = '\0';
+}
 
-  printf("\n--------- Funcionario Cadastrado ----------\n");
-  printf("Nome: %s\n", funcionario.nome);
-  printf("Categoria: %s\n", nomeCategoria(funcionario.categoria));
-  printf("Salario: %.2lf\n", funcionario.salario);
-  printf("Idade: %d\n", funcionario.idade);
-
-  return 0;
+void limparBuffer()
+{
+  while (getchar() != '\n' && getchar() != '\r')
+  {
+  }
 }
