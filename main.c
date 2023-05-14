@@ -34,6 +34,7 @@ void informacoesFuncionario();
 void listarFuncionarios(Reg *funcionarios, int pagina, int final);
 void mostrarFuncionario(Reg funcionario);
 void menu();
+void ordenarPorNome(Reg *funcionarios);
 int numeroFuncionariosRegistrados(Reg *funcionarios);
 int gerarId();
 int cadastraIdade();
@@ -49,6 +50,8 @@ Reg criarFuncionarioAleatorio(Reg *funcionarios);
 void menuPrincipal(Reg *funcionarios)
 {
   int opcao;
+
+  ordenarPorNome(funcionarios);
 
   do
   {
@@ -129,6 +132,24 @@ int main()
 }
 
 /** Implementação das funções */
+
+void ordenarPorNome(Reg *funcionarios)
+{
+  int numeroFuncionarios = numeroFuncionariosRegistrados(funcionarios);
+
+  for (int i = 0; i < numeroFuncionarios; i++)
+  {
+    for (int j = 0; j < numeroFuncionarios; j++)
+    {
+      if (strcmp(funcionarios[i].nome, funcionarios[j].nome) < 0)
+      {
+        Reg aux = funcionarios[i];
+        funcionarios[i] = funcionarios[j];
+        funcionarios[j] = aux;
+      }
+    }
+  }
+}
 
 Reg adicionarFuncionario(Reg *funcionarios, Reg novoFuncionario)
 {
