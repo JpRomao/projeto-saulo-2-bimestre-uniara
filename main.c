@@ -8,6 +8,10 @@
 #define AMBIENTE 'TEST'
 // Mudar esta variável irá resultar na mudança da quantidade de funcionários gerados aleatoriamente
 #define GERAR_FUNCIONARIOS_ALEATORIOS 3
+#define IDADE_MINIMA 18
+#define IDADE_MAXIMA 65
+#define SALARIO_MINIMO 1000.0
+#define SALARIO_MAXIMO 100000.0
 
 /***/
 
