@@ -25,6 +25,7 @@ typedef struct Funcionario
 
 int quantidadeFuncionarios = 0;
 
+/** Funções disponíveis */
 void limparBuffer();
 void limparFgets(char *string);
 void gerarFuncionariosAleatorios(Reg *funcionarios);
@@ -43,6 +44,7 @@ double cadastraSalario();
 Reg adicionarFuncionario(Reg *funcionarios, Reg novoFuncionario);
 Reg criarFuncionario();
 Reg criarFuncionarioAleatorio(Reg *funcionarios);
+/***/
 
 int main()
 {
@@ -59,6 +61,8 @@ int main()
 
   return 0;
 }
+
+/** Implementação das funções */
 
 Reg adicionarFuncionario(Reg *funcionarios, Reg novoFuncionario)
 {
