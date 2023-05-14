@@ -180,6 +180,11 @@ Reg criarFuncionarioAleatorio(Reg *funcionarios)
 
 void listarFuncionarios(Reg *funcionarios, int pagina, int final)
 {
+  if (pagina == 0)
+  {
+    printf("Listando funcionarios...\n\n");
+  }
+
   printf("Pagina %d\n\n", pagina + 1);
 
   printf("ID\t\tNome\t\tCategoria\t\tSalario\t\tIdade\n");
