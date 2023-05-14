@@ -46,35 +46,6 @@ Reg criarFuncionario();
 Reg criarFuncionarioAleatorio(Reg *funcionarios);
 /***/
 
-int main()
-{
-  Reg *funcionarios = malloc(1 * sizeof(Reg));
-
-  if (AMBIENTE == 'TEST')
-  {
-    gerarTresFuncionariosAleatorios(funcionarios);
-  }
-
-  menuPrincipal(funcionarios);
-
-  free(funcionarios);
-
-  return 0;
-}
-
-/** Implementação das funções */
-
-Reg adicionarFuncionario(Reg *funcionarios, Reg novoFuncionario)
-{
-  int size = numeroFuncionariosRegistrados(funcionarios);
-
-  funcionarios = realloc(funcionarios, (size + 1) * sizeof(Reg));
-
-  funcionarios[size] = novoFuncionario;
-
-  return *funcionarios;
-}
-
 void menuPrincipal(Reg *funcionarios)
 {
   int opcao;
@@ -139,6 +110,35 @@ void menuPrincipal(Reg *funcionarios)
       break;
     }
   } while (opcao != 6);
+}
+
+int main()
+{
+  Reg *funcionarios = malloc(1 * sizeof(Reg));
+
+  if (AMBIENTE == 'TEST')
+  {
+    gerarTresFuncionariosAleatorios(funcionarios);
+  }
+
+  menuPrincipal(funcionarios);
+
+  free(funcionarios);
+
+  return 0;
+}
+
+/** Implementação das funções */
+
+Reg adicionarFuncionario(Reg *funcionarios, Reg novoFuncionario)
+{
+  int size = numeroFuncionariosRegistrados(funcionarios);
+
+  funcionarios = realloc(funcionarios, (size + 1) * sizeof(Reg));
+
+  funcionarios[size] = novoFuncionario;
+
+  return *funcionarios;
 }
 
 void gerarFuncionariosAleatorios(Reg *funcionarios)
