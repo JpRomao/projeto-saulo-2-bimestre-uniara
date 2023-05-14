@@ -2,7 +2,16 @@
 #include <string.h>
 #include <stdlib.h>
 
-#define ENVIRONMENT 'TEST'
+/** VARIÁVIES DE TESTE */
+
+// Mudar para 'PROD' para rodar em producao e 'TEST' para rodar em testes
+#define AMBIENTE 'TEST'
+// Mudar esta variável irá resultar na mudança da quantidade de funcionários gerados aleatoriamente
+#define GERAR_FUNCIONARIOS_ALEATORIOS 3
+
+/***/
+
+// Mudar esse numero irá resultar na mudança da quantidade de funcionarios listados por pagina
 #define LIMITE_LISTAGEM 1
 
 typedef struct Funcionario
@@ -18,7 +27,7 @@ int quantidadeFuncionarios = 0;
 
 void limparBuffer();
 void limparFgets(char *string);
-void gerarTresFuncionariosAleatorios(Reg *funcionarios);
+void gerarFuncionariosAleatorios(Reg *funcionarios);
 void menuPrincipal(Reg *funcionarios);
 void listarFuncionarios(Reg *funcionarios, int pagina, int final);
 void menu();
@@ -37,7 +46,7 @@ int main()
 {
   Reg *funcionarios = malloc(1 * sizeof(Reg));
 
-  if (ENVIRONMENT == 'TEST')
+  if (AMBIENTE == 'TEST')
   {
     gerarTresFuncionariosAleatorios(funcionarios);
   }
@@ -126,9 +135,9 @@ void menuPrincipal(Reg *funcionarios)
   } while (opcao != 6);
 }
 
-void gerarTresFuncionariosAleatorios(Reg *funcionarios)
+void gerarFuncionariosAleatorios(Reg *funcionarios)
 {
-  for (int i = 0; i < 3; i++)
+  for (int i = 0; i < GERAR_FUNCIONARIOS_ALEATORIOS; i++)
   {
     adicionarFuncionario(funcionarios, criarFuncionarioAleatorio(funcionarios));
   }
@@ -160,6 +169,7 @@ Reg criarFuncionarioAleatorio(Reg *funcionarios)
   double salarioAleatorio = rand() % 100000 + 1000;
   int idadeAleatoria = rand() % 60 + 18;
 
+  novoFuncionario.id = gerarId();
   strcpy(novoFuncionario.nome, "Funcionario " + (numeroDeFuncionarios + 1));
   novoFuncionario.categoria = categoriaAleatoria;
   novoFuncionario.salario = salarioAleatorio;
@@ -176,6 +186,11 @@ void listarFuncionarios(Reg *funcionarios, int pagina, int final)
 
   for (int i = pagina * LIMITE_LISTAGEM; i < final; i++)
   {
+    if (funcionarios[i].id == 0)
+    {
+      continue;
+    }
+
     printf("%d\t%s\t\t%s\t\t%.2lf\t\t%d\n",
            funcionarios[i].id,
            funcionarios[i].nome,
