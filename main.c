@@ -1,22 +1,21 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <ctype.h>
 
 /** VARIÁVIES DE TESTE */
-
 // Mudar para 'PROD' para rodar em producao e 'TEST' para rodar em testes
-#define AMBIENTE 'TEST'
+#define AMBIENTE "TEST"
 // Mudar esta variável irá resultar na mudança da quantidade de funcionários gerados aleatoriamente
-#define GERAR_FUNCIONARIOS_ALEATORIOS 3
+#define GERAR_FUNCIONARIOS_ALEATORIOS 20
+/***/
+
 #define IDADE_MINIMA 18
 #define IDADE_MAXIMA 65
 #define SALARIO_MINIMO 1000.0
 #define SALARIO_MAXIMO 100000.0
-
-/***/
-
 // Mudar esse numero irá resultar na mudança da quantidade de funcionarios listados por pagina
-#define LIMITE_LISTAGEM 1
+#define LIMITE_LISTAGEM 10
 
 typedef struct Funcionario
 {
@@ -32,32 +31,42 @@ int quantidadeFuncionarios = 0;
 /** Funções disponíveis */
 void limparBuffer();
 void limparFgets(char *string);
-void gerarFuncionariosAleatorios(Reg *funcionarios);
 void menuPrincipal(Reg *funcionarios);
 void informacoesFuncionario();
-void listarFuncionarios(Reg *funcionarios, int pagina, int final);
+void listarFuncionarios(Reg *funcionarios, int pagina, int numeroFuncionarios);
 void mostrarFuncionario(Reg funcionario);
 void menu();
 void ordenarPorNome(Reg *funcionarios);
-void deletarFuncionario(Reg *funcionarios);
-int numeroFuncionariosRegistrados(Reg *funcionarios);
 int gerarId();
 int cadastraIdade();
 int cadastraCategoria();
-int simOuNao();
+int perguntarSimOuNao();
 char *cadastraNome();
 char *nomeCategoria(int categoria);
+char *transformarStringParaMinusculo(char *string);
 double cadastraSalario();
-Reg adicionarFuncionario(Reg *funcionarios, Reg novoFuncionario);
 Reg criarFuncionario();
-Reg criarFuncionarioAleatorio(Reg *funcionarios);
+Reg criarFuncionarioAleatorio();
+Reg *buscarFuncionarioPorNomeContendo(Reg *funcionarios, Reg *funcionariosEncontrados, int *quantidadeFuncionariosEncontrados);
+Reg *adicionarFuncionario(Reg *funcionarios, Reg novoFuncionario);
+Reg *gerarFuncionariosAleatorios(Reg *funcionarios);
+Reg *deletarFuncionario(Reg *funcionarios);
 /***/
+int tamanhoArrayFuncionarios(Reg *funcionarios);
 
 void menuPrincipal(Reg *funcionarios)
 {
   int opcao;
 
-  ordenarPorNome(funcionarios);
+  if (strcmp(AMBIENTE, "TEST") == 0)
+  {
+    funcionarios = gerarFuncionariosAleatorios(funcionarios);
+
+    ordenarPorNome(funcionarios);
+  }
+
+  int quantidadeFuncionariosPesquisados = 0;
+  Reg *funcionariosPesquisados;
 
   do
   {
@@ -65,29 +74,26 @@ void menuPrincipal(Reg *funcionarios)
     scanf("%d", &opcao);
     limparBuffer();
 
+    system("cls");
+
+    int pagina = 1;
+
     switch (opcao)
     {
     case 1:
-      adicionarFuncionario(funcionarios, criarFuncionario());
+      funcionarios = adicionarFuncionario(funcionarios, criarFuncionario());
+      ordenarPorNome(funcionarios);
       break;
-
     case 2:
-      int pagina = 0;
-
-      int numeroFuncionarios = numeroFuncionariosRegistrados(funcionarios);
-
-      int final = numeroFuncionariosRegistrados;
-
-      if (numeroFuncionarios > (pagina + 1) * LIMITE_LISTAGEM)
-      {
-        final = (pagina + 1) * LIMITE_LISTAGEM;
-      }
-
-      listarFuncionarios(funcionarios, pagina, final);
+      listarFuncionarios(funcionarios, pagina, quantidadeFuncionarios);
       break;
 
     case 3:
-      // buscarFuncionario(funcionarios, nomeFuncionario);
+      funcionariosPesquisados = buscarFuncionarioPorNomeContendo(funcionarios, funcionariosPesquisados, &quantidadeFuncionariosPesquisados);
+
+      printf("Foram encontrados %d funcionarios com o nome pesquisado.\n", quantidadeFuncionariosPesquisados);
+
+      listarFuncionarios(funcionariosPesquisados, pagina, quantidadeFuncionariosPesquisados);
       break;
     case 4:
       // alterarFuncionario(funcionarios, idFuncionario);
@@ -123,12 +129,7 @@ void menuPrincipal(Reg *funcionarios)
 
 int main()
 {
-  Reg *funcionarios = malloc(1 * sizeof(Reg));
-
-  if (AMBIENTE == 'TEST')
-  {
-    gerarTresFuncionariosAleatorios(funcionarios);
-  }
+  Reg *funcionarios = malloc(quantidadeFuncionarios * sizeof(Reg));
 
   menuPrincipal(funcionarios);
 
@@ -141,11 +142,9 @@ int main()
 
 void ordenarPorNome(Reg *funcionarios)
 {
-  int numeroFuncionarios = numeroFuncionariosRegistrados(funcionarios);
-
-  for (int i = 0; i < numeroFuncionarios; i++)
+  for (int i = 0; i < quantidadeFuncionarios; i++)
   {
-    for (int j = 0; j < numeroFuncionarios; j++)
+    for (int j = 0; j < quantidadeFuncionarios; j++)
     {
       if (strcmp(funcionarios[i].nome, funcionarios[j].nome) < 0)
       {
@@ -157,7 +156,7 @@ void ordenarPorNome(Reg *funcionarios)
   }
 }
 
-void deletarFuncionario(Reg *funcionarios)
+Reg *deletarFuncionario(Reg *funcionarios)
 {
   int idFuncionario = 0;
 
@@ -169,19 +168,13 @@ void deletarFuncionario(Reg *funcionarios)
   {
     printf("Id invalido! Deseja tentar novamente?\n");
 
-    int opcao = simOuNao();
+    int opcao = perguntarSimOuNao();
 
-    if (opcao == 1)
+    if (opcao)
     {
       return deletarFuncionario(funcionarios);
     }
-    else
-    {
-      return;
-    }
   }
-
-  int numeroFuncionarios = numeroFuncionariosRegistrados(funcionarios);
 
   int i = 0;
 
@@ -191,47 +184,45 @@ void deletarFuncionario(Reg *funcionarios)
   {
     i++;
 
-    if (i == numeroFuncionarios)
+    if (i == quantidadeFuncionarios)
     {
       printf("Funcionario nao encontrado! Deseja tentar novamente?\n");
 
-      int opcao = simOuNao();
+      int opcao = perguntarSimOuNao();
 
-      if (opcao == 1)
+      if (opcao)
       {
         return deletarFuncionario(funcionarios);
-      }
-      else
-      {
-        return;
       }
     }
   }
 
-  printf("Funcionario encontrado!\n");
-
   printf("Deseja realmente deletar o funcionario %s?\n", funcionarios[i].nome);
 
-  int opcao = simOuNao();
+  int opcao = perguntarSimOuNao();
 
-  if (opcao == 1)
+  if (opcao)
   {
-    for (int j = i; j < numeroFuncionarios; j++)
+    for (int j = i; j < quantidadeFuncionarios; j++)
     {
       funcionarios[j] = funcionarios[j + 1];
     }
 
-    funcionarios = realloc(funcionarios, (numeroFuncionarios - 1) * sizeof(Reg));
+    funcionarios = realloc(funcionarios, (quantidadeFuncionarios - 1) * sizeof(Reg));
 
     printf("Funcionario deletado com sucesso!\n");
+
+    quantidadeFuncionarios--;
   }
   else
   {
     printf("Funcionario nao deletado!\n");
   }
+
+  return funcionarios;
 }
 
-int simOuNao()
+int perguntarSimOuNao()
 {
   int opcao;
 
@@ -252,27 +243,74 @@ int simOuNao()
   {
     printf("Opcao invalida!\n");
 
-    return simOuNao();
+    return perguntarSimOuNao();
   }
 }
 
-Reg adicionarFuncionario(Reg *funcionarios, Reg novoFuncionario)
+Reg *buscarFuncionarioPorNomeContendo(Reg *funcionarios, Reg *funcionariosEncontrados, int *quantidadeFuncionariosEncontrados)
 {
-  int size = numeroFuncionariosRegistrados(funcionarios);
+  char nomeFuncionario[20] = "";
 
-  funcionarios = realloc(funcionarios, (size + 1) * sizeof(Reg));
+  printf("Digite o nome do funcionario que deseja buscar\n");
+  strcpy(nomeFuncionario, cadastraNome());
 
-  funcionarios[size] = novoFuncionario;
+  char *nomeEmMinusculo = transformarStringParaMinusculo(nomeFuncionario);
 
-  return *funcionarios;
+  funcionariosEncontrados = malloc((*quantidadeFuncionariosEncontrados) * sizeof(Reg));
+
+  for (int i = 0, j = 0; i < quantidadeFuncionarios; i++)
+  {
+    char *nomeFuncionarioEmMinusculo = transformarStringParaMinusculo(funcionarios[i].nome);
+
+    if (strstr(nomeFuncionarioEmMinusculo, nomeEmMinusculo))
+    {
+      funcionariosEncontrados = realloc(funcionariosEncontrados, (j + 1) * sizeof(Reg));
+      funcionariosEncontrados[j] = funcionarios[i];
+      j++;
+      *quantidadeFuncionariosEncontrados = j;
+    }
+  }
+
+  return funcionariosEncontrados;
 }
 
-void gerarFuncionariosAleatorios(Reg *funcionarios)
+char *transformarStringParaMinusculo(char *string)
+{
+  char *stringMinusculo = (char *)malloc(strlen(string) + 1);
+  strcpy(stringMinusculo, string);
+
+  for (int i = 0; string[i]; i++)
+  {
+    stringMinusculo[i] = tolower(string[i]);
+  }
+
+  return stringMinusculo;
+}
+
+Reg *adicionarFuncionario(Reg *funcionarios, Reg novoFuncionario)
+{
+  int indice = quantidadeFuncionarios - 1;
+
+  funcionarios = realloc(funcionarios, (quantidadeFuncionarios + 1) * sizeof(Reg));
+  funcionarios[indice].categoria = novoFuncionario.categoria;
+  funcionarios[indice].idade = novoFuncionario.idade;
+  funcionarios[indice].salario = novoFuncionario.salario;
+  funcionarios[indice].id = novoFuncionario.id;
+  strcpy(funcionarios[indice].nome, novoFuncionario.nome);
+
+  return funcionarios;
+}
+
+Reg *gerarFuncionariosAleatorios(Reg *funcionarios)
 {
   for (int i = 0; i < GERAR_FUNCIONARIOS_ALEATORIOS; i++)
   {
-    adicionarFuncionario(funcionarios, criarFuncionarioAleatorio(funcionarios));
+    Reg novoFuncionario = criarFuncionarioAleatorio();
+
+    funcionarios = adicionarFuncionario(funcionarios, novoFuncionario);
   }
+
+  return funcionarios;
 }
 
 void menu()
@@ -280,9 +318,9 @@ void menu()
   printf("Escolha uma opcao:\n");
   printf("1- Cadastrar funcionario\n");
   printf("2- Listar funcionarios\n");
-  printf("3- Buscar funcionario por nome (nao implementado)\n");
+  printf("3- Buscar funcionario por nome\n");
   printf("4- Alterar dados de um funcionario (nao implementado)\n");
-  printf("5- Deletar funcionario por id (nao implementado)\n");
+  printf("5- Deletar funcionario por id\n");
   printf("6- Total de salarios por categoria (nao implementado)\n");
   printf("7- Maior e menor salario por categoria (nao implementado)\n");
   printf("8- Media de idade por categoria (nao implementado)\n");
@@ -291,34 +329,58 @@ void menu()
   printf("11- Sair\n");
 }
 
+void imprimirLinha()
+{
+  printf("---------------------------------------------------------------------------------------------------------------------------\n");
+}
+
 void informacoesFuncionario()
 {
-  printf("ID\t\tNOME\t\t\tSALARIO\t\tCATEGORIA\tIDADE\n");
+  imprimirLinha();
+  printf("ID\t\t\tNOME\t\t\t\tSALARIO\t\t\tCATEGORIA\t\t\tIDADE\n");
+}
+
+int tamanhoArrayFuncionarios(Reg *funcionarios)
+{
+  // calculate number of elements in array of structs
+  int tamanho = 0;
+
+  while (funcionarios[tamanho].id != 0)
+  {
+    tamanho++;
+  }
+
+  return tamanho;
 }
 
 void mostrarFuncionario(Reg funcionario)
 {
-  informacoesFuncionario();
-  printf("%d\t\t%s\t\t\t%.2f\t\t%s\t\t%d\n",
+  printf("%d\t\t\t%s\t\t\t%.2f\t\t\t%s\t\t\t%d\n",
          funcionario.id,
          funcionario.nome,
          funcionario.salario,
          nomeCategoria(funcionario.categoria),
          funcionario.idade);
+  printf("\n");
 }
 
-Reg criarFuncionarioAleatorio(Reg *funcionarios)
+Reg criarFuncionarioAleatorio()
 {
-  Reg novoFuncionario;
+  printf("Criando funcionario aleatorio...\n");
 
-  int numeroDeFuncionarios = numeroDeFuncionariosRegistrados(funcionarios);
+  Reg novoFuncionario;
 
   int categoriaAleatoria = rand() % 3 + 1;
   double salarioAleatorio = rand() % 100000 + 1000;
-  int idadeAleatoria = rand() % 60 + 18;
+  int idadeAleatoria = rand() % IDADE_MAXIMA + 18;
 
   novoFuncionario.id = gerarId();
-  strcpy(novoFuncionario.nome, "Funcionario " + (numeroDeFuncionarios + 1));
+
+  strcpy(novoFuncionario.nome, "Funcionario ");
+  char *numeroDeFuncionariosString = (char *)malloc(sizeof(char) * novoFuncionario.id);
+  sprintf(numeroDeFuncionariosString, "%d", novoFuncionario.id);
+  strcat(novoFuncionario.nome, numeroDeFuncionariosString);
+
   novoFuncionario.categoria = categoriaAleatoria;
   novoFuncionario.salario = salarioAleatorio;
   novoFuncionario.idade = idadeAleatoria;
@@ -326,50 +388,40 @@ Reg criarFuncionarioAleatorio(Reg *funcionarios)
   return novoFuncionario;
 }
 
-void listarFuncionarios(Reg *funcionarios, int pagina, int final)
+void listarFuncionarios(Reg *funcionarios, int pagina, int numeroFuncionarios)
 {
-  if (pagina == 0)
+  int final = numeroFuncionarios;
+
+  if (numeroFuncionarios > pagina * LIMITE_LISTAGEM)
+  {
+    final = pagina * LIMITE_LISTAGEM;
+  }
+
+  if (pagina == 1)
   {
     printf("Listando funcionarios...\n\n");
   }
 
-  printf("Pagina %d\n\n", pagina + 1);
+  printf("\nPagina %d:\n", pagina);
+
+  int inicio = (pagina - 1) * LIMITE_LISTAGEM;
 
   informacoesFuncionario();
-
-  for (int i = pagina * LIMITE_LISTAGEM; i < final; i++)
+  for (int i = inicio; i < final; i++)
   {
-    if (funcionarios[i].id == 0)
-    {
-      continue;
-    }
-
-    printf("%d\t%s\t\t%s\t\t%.2lf\t\t%d\n",
-           funcionarios[i].id,
-           funcionarios[i].nome,
-           nomeCategoria(funcionarios[i].categoria),
-           funcionarios[i].salario,
-           funcionarios[i].idade);
+    mostrarFuncionario(funcionarios[i]);
   }
+  imprimirLinha();
 
-  int usuarioDesejaIrParaProximaPagina;
-
-  do
+  if (numeroFuncionarios > final)
   {
-    printf("Há mais funcionários, deseja ir para próxima página?\n");
-    usuarioDesejaIrParaProximaPagina = simOuNao();
+    int usuarioDesejaVerProximaPagina = perguntarSimOuNao();
 
-    switch (usuarioDesejaIrParaProximaPagina)
+    if (usuarioDesejaVerProximaPagina)
     {
-    case 1:
-      listarFuncionarios(funcionarios, pagina + 1, final + LIMITE_LISTAGEM);
-      break;
-    case 2:
-      break;
-    default:
-      printf("Opcao invalida! Digite novamente.\n");
+      listarFuncionarios(funcionarios, pagina + 1, numeroFuncionarios);
     }
-  } while (usuarioDesejaIrParaProximaPagina != 1 && usuarioDesejaIrParaProximaPagina != 2);
+  }
 }
 
 Reg criarFuncionario()
@@ -407,7 +459,6 @@ char *nomeCategoria(int categoria)
 
 char *cadastraNome()
 {
-
   char *nome = malloc(20 * sizeof(char));
 
   printf("Digite o nome do funcionario: ");
@@ -471,25 +522,17 @@ int cadastraIdade()
   if (idade < IDADE_MINIMA)
   {
     printf("A idade digitada eh invalida! A idade precisa ser igual ou superior a: %d", IDADE_MINIMA);
+
+    return cadastraIdade();
   }
   else if (idade > IDADE_MAXIMA)
   {
     printf("A idade digitada eh invalida! A idade precisa ser igual ou inferior a: %d", IDADE_MAXIMA);
+
+    return cadastraIdade();
   }
 
   return idade;
-}
-
-int numeroFuncionariosRegistrados(Reg *funcionarios)
-{
-  int i = 0;
-
-  while (funcionarios[i].nome != '\0')
-  {
-    i++;
-  }
-
-  return i;
 }
 
 int gerarId()
