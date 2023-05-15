@@ -54,15 +54,20 @@ Reg *deletarFuncionario(Reg *funcionarios);
 /***/
 int tamanhoArrayFuncionarios(Reg *funcionarios);
 
-void menuPrincipal(Reg *funcionarios)
+void menuPrincipal(Reg *funcionarios, int jaFoiOrdenado)
 {
   int opcao;
 
   if (strcmp(AMBIENTE, "TEST") == 0)
   {
     funcionarios = gerarFuncionariosAleatorios(funcionarios);
+  }
 
+  if (!jaFoiOrdenado)
+  {
     ordenarPorNome(funcionarios);
+
+    jaFoiOrdenado = 1;
   }
 
   int quantidadeFuncionariosPesquisados = 0;
@@ -82,7 +87,8 @@ void menuPrincipal(Reg *funcionarios)
     {
     case 1:
       funcionarios = adicionarFuncionario(funcionarios, criarFuncionario());
-      ordenarPorNome(funcionarios);
+
+      jaFoiOrdenado = 0;
       break;
     case 2:
       listarFuncionarios(funcionarios, pagina, quantidadeFuncionarios);
@@ -97,6 +103,7 @@ void menuPrincipal(Reg *funcionarios)
       break;
     case 4:
       // alterarFuncionario(funcionarios, idFuncionario);
+      // jaFoiOrdenado = 0;
       break;
     case 5:
       deletarFuncionario(funcionarios);
@@ -125,13 +132,17 @@ void menuPrincipal(Reg *funcionarios)
       break;
     }
   } while (opcao != 6);
+
+  free(funcionariosPesquisados);
 }
 
 int main()
 {
   Reg *funcionarios = malloc(quantidadeFuncionarios * sizeof(Reg));
 
-  menuPrincipal(funcionarios);
+  int jaFoiOrdenado = 0;
+
+  menuPrincipal(funcionarios, jaFoiOrdenado);
 
   free(funcionarios);
 
