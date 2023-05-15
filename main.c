@@ -109,7 +109,7 @@ void menuPrincipal(Reg *funcionarios, int jaFoiOrdenado)
       deletarFuncionario(funcionarios);
       break;
     case 6:
-      // totalSalariosPorCategoria(funcionarios);
+      totalSalariosPorCategoria(funcionarios);
       break;
     case 7:
       // maiorMenorSalarioPorCategoria(funcionarios);
@@ -231,6 +231,35 @@ Reg *deletarFuncionario(Reg *funcionarios)
   }
 
   return funcionarios;
+}
+
+void totalSalariosPorCategoria(Reg *funcionarios)
+{
+  double totalGerencia;
+  double totalSupervisao;
+  double totalOperacional;
+
+  for (int i = 0; i < quantidadeFuncionarios; i++)
+  {
+    switch (funcionarios[i].categoria)
+    {
+    case 1:
+      totalGerencia += funcionarios[i].salario;
+      break;
+
+    case 2:
+      totalSupervisao += funcionarios[i].salario;
+      break;
+
+    case 3:
+      totalOperacional += funcionarios[i].salario;
+      break;
+    }
+  }
+
+  printf("Total de salarios categoria Gerencia: %.2lf\n", totalGerencia);
+  printf("Total de salarios categoria Supervisao: %.2lf\n", totalSupervisao);
+  printf("Total de salarios categoria Operacional: %.2lf\n", totalOperacional);
 }
 
 int perguntarSimOuNao()
