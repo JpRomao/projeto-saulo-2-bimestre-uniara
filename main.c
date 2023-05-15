@@ -425,6 +425,15 @@ double cadastraSalario()
   scanf("%lf", &salario);
   limparBuffer();
 
+  if (salario < SALARIO_MINIMO)
+  {
+    printf("Salário abaixo do permitido. Digite um salário igual ou acima de: %.2lf", SALARIO_MINIMO);
+  }
+  else if (salario > SALARIO_MAXIMO)
+  {
+    printf("Salário acima do permitido. Digite um salário igual ou abaixo de: %.2lf", SALARIO_MAXIMO);
+  }
+
   return salario;
 }
 
@@ -455,17 +464,19 @@ int cadastraIdade()
 {
   int idade;
 
-  do
-  {
-    printf("Digite a idade do funcionario: ");
-    scanf("%d", &idade);
-    limparBuffer();
+  printf("Digite a idade do funcionario: ");
+  scanf("%d", &idade);
+  limparBuffer();
 
-    if (idade <= 0)
-    {
-      printf("A idade digitada eh invalida! Digite novamente.\n");
-    }
-  } while (idade <= 0);
+  if (idade < IDADE_MINIMA)
+  {
+    printf("A idade digitada eh invalida! A idade precisa ser igual ou superior a: %d", IDADE_MINIMA);
+  }
+  else if (idade > IDADE_MAXIMA)
+  {
+    printf("A idade digitada eh invalida! A idade precisa ser igual ou inferior a: %d", IDADE_MAXIMA);
+  }
+
   return idade;
 }
 
