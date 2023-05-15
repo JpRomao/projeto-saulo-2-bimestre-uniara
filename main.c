@@ -31,7 +31,7 @@ int quantidadeFuncionarios = 0;
 /** Funções disponíveis */
 void limparBuffer();
 void limparFgets(char *string);
-void menuPrincipal(Reg *funcionarios);
+void menuPrincipal(Reg *funcionarios, int jaFoiOrdenado);
 void informacoesFuncionario();
 void listarFuncionarios(Reg *funcionarios, int pagina, int numeroFuncionarios);
 void mostrarFuncionario(Reg funcionario);
