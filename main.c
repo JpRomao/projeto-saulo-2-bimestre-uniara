@@ -7,7 +7,7 @@
 // Mudar para 'PROD' para rodar em producao e 'TEST' para rodar em testes
 #define AMBIENTE "TEST"
 // Mudar esta variável irá resultar na mudança da quantidade de funcionários gerados aleatoriamente
-#define GERAR_FUNCIONARIOS_ALEATORIOS 20
+#define GERAR_FUNCIONARIOS_ALEATORIOS 3
 /***/
 
 #define IDADE_MINIMA 18
@@ -270,7 +270,7 @@ Reg *nomeFuncionarioMaisNovo(Reg *funcionarios)
 
   for (int i = 1; i < quantidadeFuncionarios; i++)
   {
-    if (funcionarios[i].idade < funcionarioMaisNovo)
+    if (funcionarios[i].idade < funcionarioMaisNovo->idade)
     {
       funcionarioMaisNovo = &funcionarios[i];
     }
@@ -381,7 +381,7 @@ void menu()
   printf("3- Buscar funcionario por nome\n");
   printf("4- Alterar dados de um funcionario (nao implementado)\n");
   printf("5- Deletar funcionario por id\n");
-  printf("6- Total de salarios por categoria (nao implementado)\n");
+  printf("6- Total de salarios por categoria\n");
   printf("7- Maior e menor salario por categoria (nao implementado)\n");
   printf("8- Media de idade por categoria (nao implementado)\n");
   printf("9- Quantidade de funcionarios por salario (nao implementado)\n");
@@ -397,7 +397,7 @@ void imprimirLinha()
 void informacoesFuncionario()
 {
   imprimirLinha();
-  printf("ID\t\t\tNOME\t\t\t\tSALARIO\t\t\tCATEGORIA\t\t\tIDADE\n");
+  printf("ID\t\tNOME\t\t\tSALARIO\t\tCATEGORIA\t\tIDADE\n");
 }
 
 int tamanhoArrayFuncionarios(Reg *funcionarios)
@@ -415,7 +415,7 @@ int tamanhoArrayFuncionarios(Reg *funcionarios)
 
 void mostrarFuncionario(Reg funcionario)
 {
-  printf("%d\t\t\t%s\t\t\t%.2f\t\t\t%s\t\t\t%d\n",
+  printf("%d\t\t%s\t\t%.2f\t\t%s\t\t%d\n",
          funcionario.id,
          funcionario.nome,
          funcionario.salario,
