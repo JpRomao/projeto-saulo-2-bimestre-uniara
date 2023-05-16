@@ -37,7 +37,12 @@ void listarFuncionarios(Reg *funcionarios, int pagina, int numeroFuncionarios);
 void mostrarFuncionario(Reg funcionario);
 void menu();
 void ordenarPorNome(Reg *funcionarios);
+<<<<<<< HEAD
 void Maior_Menor_Cat(int categoria, Reg *funcionarios, int quantidadeFuncionarios);
+=======
+void totalSalariosPorCategoria(Reg *funcionarios);
+void mediaIdadePorCategoria(Reg *funcionarios);
+>>>>>>> 8c06d9564c337d616152016984f1098ec38f91c6
 int gerarId();
 int cadastraIdade();
 int cadastraCategoria();
@@ -46,14 +51,20 @@ char *cadastraNome();
 char *nomeCategoria(int categoria);
 char *transformarStringParaMinusculo(char *string);
 double cadastraSalario();
+<<<<<<< HEAD
 double Menor_Salario(double a, double b);
 double Maior_Salario(double a, double b);
 Reg criarFuncionario();
+=======
+void quantidadeFuncionariosComSalarioMinimo(Reg *funcionarios);
+Reg criarFuncionario(int estaAlterando, int id);
+>>>>>>> 8c06d9564c337d616152016984f1098ec38f91c6
 Reg criarFuncionarioAleatorio();
 Reg *buscarFuncionarioPorNomeContendo(Reg *funcionarios, Reg *funcionariosEncontrados, int *quantidadeFuncionariosEncontrados);
 Reg *adicionarFuncionario(Reg *funcionarios, Reg novoFuncionario);
 Reg *gerarFuncionariosAleatorios(Reg *funcionarios);
 Reg *deletarFuncionario(Reg *funcionarios);
+
 Reg *nomeFuncionarioMaisNovo(Reg *funcionario);
 /***/
 int tamanhoArrayFuncionarios(Reg *funcionarios);
@@ -113,7 +124,7 @@ void menuPrincipal(Reg *funcionarios, int jaFoiOrdenado)
       deletarFuncionario(funcionarios);
       break;
     case 6:
-      totalSalariosPorCategoria(funcionarios);
+      quantidadeFuncionariosComSalarioMinimo(funcionarios);
       break;
     case 7:
       Maior_Menor_Cat(int 1, Reg *funcionarios, int quantidadeFuncionarios);
@@ -121,10 +132,10 @@ void menuPrincipal(Reg *funcionarios, int jaFoiOrdenado)
       Maior_Menor_Cat(int 3, Reg *funcionarios, int quantidadeFuncionarios);
       break;
     case 8:
-      // mediaIdadePorCategoria(funcionarios);
+      mediaIdadePorCategoria(funcionarios);
       break;
     case 9:
-      // quantidadeFuncionariosPorSalario(funcionarios);
+      quantidadeFuncionariosPorSalario(funcionarios);
       break;
     case 10:
       nomeFuncionarioMaisNovo(funcionarios);
@@ -137,7 +148,7 @@ void menuPrincipal(Reg *funcionarios, int jaFoiOrdenado)
       printf("Opcao invalida!\n");
       break;
     }
-  } while (opcao != 6);
+  } while (opcao != 11);
 
   free(funcionariosPesquisados);
 }
@@ -171,6 +182,51 @@ void ordenarPorNome(Reg *funcionarios)
       }
     }
   }
+}
+
+void quantidadeFuncionariosComSalarioMinimo(Reg *funcionarios)
+{
+  const ate2000 = 2000;
+  const ate4000 = 4000;
+  const ate6000 = 6000;
+  const ate8000 = 8000;
+  const mais8000 = 8001;
+
+  int quantidadeAte2000 = 0;
+  int quantidadeAte4000 = 0;
+  int quantidadeAte6000 = 0;
+  int quantidadeAte8000 = 0;
+  int quantidadeMais8000 = 0;
+
+  for (int i = 0; i < quantidadeFuncionarios; i++)
+  {
+    if (funcionarios[i].salario <= ate2000)
+    {
+      quantidadeAte2000++;
+    }
+    else if (funcionarios[i].salario <= ate4000)
+    {
+      quantidadeAte4000++;
+    }
+    else if (funcionarios[i].salario <= ate6000)
+    {
+      quantidadeAte6000++;
+    }
+    else if (funcionarios[i].salario <= ate8000)
+    {
+      quantidadeAte8000++;
+    }
+    else
+    {
+      quantidadeMais8000++;
+    }
+  }
+
+  printf("Quantidade de funcionarios com salario ate 2000: %d\n", quantidadeAte2000);
+  printf("Quantidade de funcionarios com salario ate 4000: %d\n", quantidadeAte4000);
+  printf("Quantidade de funcionarios com salario ate 6000: %d\n", quantidadeAte6000);
+  printf("Quantidade de funcionarios com salario ate 8000: %d\n", quantidadeAte8000);
+  printf("Quantidade de funcionarios com salario acima de 8000: %d\n", quantidadeMais8000);
 }
 
 Reg *deletarFuncionario(Reg *funcionarios)
@@ -241,9 +297,9 @@ Reg *deletarFuncionario(Reg *funcionarios)
 
 void totalSalariosPorCategoria(Reg *funcionarios)
 {
-  double totalGerencia;
-  double totalSupervisao;
-  double totalOperacional;
+  double totalGerencia = 0;
+  double totalSupervisao = 0;
+  double totalOperacional = 0;
 
   for (int i = 0; i < quantidadeFuncionarios; i++)
   {
@@ -266,6 +322,44 @@ void totalSalariosPorCategoria(Reg *funcionarios)
   printf("Total de salarios categoria Gerencia: %.2lf\n", totalGerencia);
   printf("Total de salarios categoria Supervisao: %.2lf\n", totalSupervisao);
   printf("Total de salarios categoria Operacional: %.2lf\n", totalOperacional);
+}
+
+void mediaIdadePorCategoria(Reg *funcionarios)
+{
+  int totalGerencia = 0;
+  int totalSupervisao = 0;
+  int totalOperacional = 0;
+  int contGerencia = 0;
+  int contSupervisao = 0;
+  int contOperacional = 0;
+
+  for (int i = 0; i < quantidadeFuncionarios; i++)
+  {
+    switch (funcionarios[i].categoria)
+    {
+    case 1:
+      totalGerencia += funcionarios[i].idade;
+      contGerencia++;
+      break;
+
+    case 2:
+      totalSupervisao += funcionarios[i].idade;
+      contSupervisao++;
+      break;
+
+    case 3:
+      totalOperacional += funcionarios[i].idade;
+      contOperacional++;
+      break;
+    }
+  }
+  int mediaGerencia = totalGerencia / contGerencia;
+  int mediaSupervisao = totalSupervisao / contSupervisao;
+  int mediaOperacional = totalOperacional / contOperacional;
+
+  printf("Media de idade da categoria Gerencia: %d\n", mediaGerencia);
+  printf("Media de idade da categoria Supervisao: %d\n", mediaSupervisao);
+  printf("Media de idade da categoria Operacional: %d\n", mediaOperacional);
 }
 
 Reg *nomeFuncionarioMaisNovo(Reg *funcionarios)
@@ -493,7 +587,19 @@ Reg criarFuncionario()
 {
   Reg funcionario;
 
+<<<<<<< HEAD
   funcionario.id = gerarId();
+=======
+  if (estaAlterando)
+  {
+    funcionario.id = gerarId();
+  }
+  else
+  {
+    funcionario.id = id;
+  }
+
+>>>>>>> 8c06d9564c337d616152016984f1098ec38f91c6
   strcpy(funcionario.nome, cadastraNome());
   funcionario.categoria = cadastraCategoria();
   funcionario.salario = cadastraSalario();
@@ -681,3 +787,11 @@ void Maior_Menor_Cat(int categoria, Reg *funcionarios, int quantidadeFuncionario
     printf("\n");
   }
 }
+<<<<<<< HEAD
+=======
+}
+printf("\nO maior salario da categoria %d e: %lf", funcionario[i].categoria, maior);
+printf("\nO menor salario da categoria %d e: %lf", funcionario[i].categoria, menor);
+}
+*/
+>>>>>>> 8c06d9564c337d616152016984f1098ec38f91c6
