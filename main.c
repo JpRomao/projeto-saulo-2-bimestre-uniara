@@ -16,11 +16,12 @@
 #define SALARIO_MAXIMO 100000.0
 // Mudar esse numero irá resultar na mudança da quantidade de funcionarios listados por pagina
 #define LIMITE_LISTAGEM 10
+#define MAX_CARACTERES 20
 
 typedef struct Funcionario
 {
   int id;
-  char nome[20];
+  char nome[MAX_CARACTERES];
   double salario;
   int categoria;
   int idade;
@@ -41,6 +42,7 @@ int gerarId();
 int cadastraIdade();
 int cadastraCategoria();
 int perguntarSimOuNao();
+int tamanhoArrayFuncionarios(Reg *funcionarios);
 char *cadastraNome();
 char *nomeCategoria(int categoria);
 char *transformarStringParaMinusculo(char *string);
@@ -52,8 +54,8 @@ Reg *adicionarFuncionario(Reg *funcionarios, Reg novoFuncionario);
 Reg *gerarFuncionariosAleatorios(Reg *funcionarios);
 Reg *deletarFuncionario(Reg *funcionarios);
 Reg *nomeFuncionarioMaisNovo(Reg *funcionario);
+Reg *alterarFuncionario(Reg *funcionarios);
 /***/
-int tamanhoArrayFuncionarios(Reg *funcionarios);
 
 void menuPrincipal(Reg *funcionarios, int jaFoiOrdenado)
 {
@@ -87,7 +89,7 @@ void menuPrincipal(Reg *funcionarios, int jaFoiOrdenado)
     switch (opcao)
     {
     case 1:
-      funcionarios = adicionarFuncionario(funcionarios, criarFuncionario());
+      funcionarios = adicionarFuncionario(funcionarios, criarFuncionario(0, 0));
 
       jaFoiOrdenado = 0;
       break;
@@ -103,8 +105,8 @@ void menuPrincipal(Reg *funcionarios, int jaFoiOrdenado)
       listarFuncionarios(funcionariosPesquisados, pagina, quantidadeFuncionariosPesquisados);
       break;
     case 4:
-      // alterarFuncionario(funcionarios, idFuncionario);
-      // jaFoiOrdenado = 0;
+      alterarFuncionario(funcionarios);
+      jaFoiOrdenado = 0;
       break;
     case 5:
       deletarFuncionario(funcionarios);
@@ -229,6 +231,67 @@ Reg *deletarFuncionario(Reg *funcionarios)
   else
   {
     printf("Funcionario nao deletado!\n");
+  }
+
+  return funcionarios;
+}
+
+Reg *alterarFuncionario(Reg *funcionarios)
+{
+  int idFuncionario = 0;
+
+  printf("Digite o id do funcionario que deseja alterar: ");
+  scanf("%d", &idFuncionario);
+  limparBuffer();
+
+  if (idFuncionario == 0)
+  {
+    printf("Id invalido! Deseja tentar novamente?\n");
+
+    int opcao = perguntarSimOuNao();
+
+    if (opcao)
+    {
+      return alterarFuncionario(funcionarios);
+    }
+  }
+
+  int i = 0;
+
+  printf("Encontrando funcionario...");
+
+  while (funcionarios[i].id != idFuncionario)
+  {
+    i++;
+
+    if (i == quantidadeFuncionarios)
+    {
+      printf("Funcionario nao encontrado! Deseja tentar novamente?\n");
+
+      int opcao = perguntarSimOuNao();
+
+      if (opcao)
+      {
+        return alterarFuncionario(funcionarios);
+      }
+    }
+  }
+
+  printf("Deseja realmente alterar o funcionario %s?\n", funcionarios[i].nome);
+
+  int opcao = perguntarSimOuNao();
+
+  if (opcao)
+  {
+    int estaAlterando = 1;
+
+    funcionarios[i] = criarFuncionario(estaAlterando, funcionarios[i].id);
+
+    printf("Funcionario alterado com sucesso!\n");
+  }
+  else
+  {
+    printf("Funcionario nao alterado!\n");
   }
 
   return funcionarios;
@@ -379,7 +442,7 @@ void menu()
   printf("1- Cadastrar funcionario\n");
   printf("2- Listar funcionarios\n");
   printf("3- Buscar funcionario por nome\n");
-  printf("4- Alterar dados de um funcionario (nao implementado)\n");
+  printf("4- Alterar dados de um funcionario\n");
   printf("5- Deletar funcionario por id\n");
   printf("6- Total de salarios por categoria\n");
   printf("7- Maior e menor salario por categoria (nao implementado)\n");
@@ -484,11 +547,18 @@ void listarFuncionarios(Reg *funcionarios, int pagina, int numeroFuncionarios)
   }
 }
 
-Reg criarFuncionario()
+Reg criarFuncionario(int estaAlterando, int id)
 {
   Reg funcionario;
 
-  funcionario.id = gerarId();
+  if (estaAlterando)
+  {
+    funcionario.id = gerarId();
+  }
+  else
+  {
+    funcionario.id = id;
+  }
   strcpy(funcionario.nome, cadastraNome());
   funcionario.categoria = cadastraCategoria();
   funcionario.salario = cadastraSalario();
