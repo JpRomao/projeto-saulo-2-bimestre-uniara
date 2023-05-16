@@ -1,3 +1,8 @@
+/**
+ * Projeto no GitHub: https://github.com/JpRomao/projeto-saulo-2-bimestre-uniara
+ * Documentação do projeto: https://fourth-metatarsal-651.notion.site/Documenta-o-projeto-Saulo-2-Bimestre-e3cbab03739943ab84ff2f65410a589a
+ */
+
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -37,31 +42,30 @@ void listarFuncionarios(Reg *funcionarios, int pagina, int numeroFuncionarios);
 void mostrarFuncionario(Reg funcionario);
 void menu();
 void ordenarPorNome(Reg *funcionarios);
-void Maior_Menor_Cat(int categoria, Reg *funcionarios, int quantidadeFuncionarios);
 void totalSalariosPorCategoria(Reg *funcionarios);
 void mediaIdadePorCategoria(Reg *funcionarios);
+void quantidadeFuncionariosComSalarioMinimo(Reg *funcionarios);
+void funcionariosComMaiorEMenorSalarioPorCategoria(Reg *funcionarios);
 int gerarId();
 int cadastraIdade();
 int cadastraCategoria();
 int perguntarSimOuNao();
+int tamanhoArrayFuncionarios(Reg *funcionarios);
 char *cadastraNome();
 char *nomeCategoria(int categoria);
 char *transformarStringParaMinusculo(char *string);
 double cadastraSalario();
-double Menor_Salario(double a, double b);
-double Maior_Salario(double a, double b);
-void quantidadeFuncionariosComSalarioMinimo(Reg *funcionarios);
-Reg criarFuncionario();
 Reg criarFuncionario(int estaAlterando, int id);
 Reg criarFuncionarioAleatorio();
+Reg funcionarioComMaiorSalario(Reg *funcionarios);
+Reg funcionarioComMenorSalario(Reg *funcionarios);
 Reg *buscarFuncionarioPorNomeContendo(Reg *funcionarios, Reg *funcionariosEncontrados, int *quantidadeFuncionariosEncontrados);
 Reg *adicionarFuncionario(Reg *funcionarios, Reg novoFuncionario);
 Reg *gerarFuncionariosAleatorios(Reg *funcionarios);
 Reg *deletarFuncionario(Reg *funcionarios);
-
 Reg *nomeFuncionarioMaisNovo(Reg *funcionario);
+Reg *alterarFuncionario(Reg *funcionarios);
 /***/
-int tamanhoArrayFuncionarios(Reg *funcionarios);
 
 void menuPrincipal(Reg *funcionarios, int jaFoiOrdenado)
 {
@@ -88,8 +92,6 @@ void menuPrincipal(Reg *funcionarios, int jaFoiOrdenado)
     scanf("%d", &opcao);
     limparBuffer();
 
-    system("cls");
-
     int pagina = 1;
 
     switch (opcao)
@@ -111,25 +113,23 @@ void menuPrincipal(Reg *funcionarios, int jaFoiOrdenado)
       listarFuncionarios(funcionariosPesquisados, pagina, quantidadeFuncionariosPesquisados);
       break;
     case 4:
-      // alterarFuncionario(funcionarios, idFuncionario);
-      // jaFoiOrdenado = 0;
+      alterarFuncionario(funcionarios);
+      jaFoiOrdenado = 0;
       break;
     case 5:
       deletarFuncionario(funcionarios);
       break;
     case 6:
-      quantidadeFuncionariosComSalarioMinimo(funcionarios);
+      totalSalariosPorCategoria(funcionarios);
       break;
     case 7:
-      Maior_Menor_Cat(1, funcionarios, quantidadeFuncionarios);
-      Maior_Menor_Cat(2, funcionarios, quantidadeFuncionarios);
-      Maior_Menor_Cat(3, funcionarios, quantidadeFuncionarios);
+      funcionariosComMaiorEMenorSalarioPorCategoria(funcionarios);
       break;
     case 8:
       mediaIdadePorCategoria(funcionarios);
       break;
     case 9:
-      quantidadeFuncionariosPorSalario(funcionarios);
+      quantidadeFuncionariosComSalarioMinimo(funcionarios);
       break;
     case 10:
       nomeFuncionarioMaisNovo(funcionarios);
@@ -137,14 +137,11 @@ void menuPrincipal(Reg *funcionarios, int jaFoiOrdenado)
     case 11:
       printf("Saindo...\n");
       break;
-
     default:
       printf("Opcao invalida!\n");
       break;
     }
   } while (opcao != 11);
-
-  free(funcionariosPesquisados);
 }
 
 int main()
@@ -180,11 +177,11 @@ void ordenarPorNome(Reg *funcionarios)
 
 void quantidadeFuncionariosComSalarioMinimo(Reg *funcionarios)
 {
-  const ate2000 = 2000;
-  const ate4000 = 4000;
-  const ate6000 = 6000;
-  const ate8000 = 8000;
-  const mais8000 = 8001;
+  const int ate2000 = 2000;
+  const int ate4000 = 4000;
+  const int ate6000 = 6000;
+  const int ate8000 = 8000;
+  const int mais8000 = 8001;
 
   int quantidadeAte2000 = 0;
   int quantidadeAte4000 = 0;
@@ -289,6 +286,69 @@ Reg *deletarFuncionario(Reg *funcionarios)
   return funcionarios;
 }
 
+Reg *alterarFuncionario(Reg *funcionarios)
+{
+  int idFuncionario = 0;
+
+  printf("Digite o id do funcionario que deseja alterar: ");
+  scanf("%d", &idFuncionario);
+  limparBuffer();
+
+  if (idFuncionario == 0)
+  {
+    printf("Id invalido! Deseja tentar novamente?\n");
+
+    int opcao = perguntarSimOuNao();
+
+    if (opcao)
+    {
+      return alterarFuncionario(funcionarios);
+    }
+  }
+
+  int i = 0;
+
+  printf("Encontrando funcionario...");
+
+  while (funcionarios[i].id != idFuncionario)
+  {
+    i++;
+
+    if (i == quantidadeFuncionarios)
+    {
+      printf("Funcionario nao encontrado! Deseja tentar novamente?\n");
+
+      int opcao = perguntarSimOuNao();
+
+      if (opcao)
+      {
+        return alterarFuncionario(funcionarios);
+      }
+    }
+  }
+
+  printf("Deseja realmente alterar o funcionario %s?\n", funcionarios[i].nome);
+
+  int opcao = perguntarSimOuNao();
+
+  if (opcao)
+  {
+    int estaAlterando = 1;
+
+    Reg novoFuncionario = criarFuncionario(estaAlterando, funcionarios[i].id);
+
+    funcionarios[i] = novoFuncionario;
+
+    printf("Funcionario alterado com sucesso!\n");
+
+    return funcionarios;
+  }
+  else
+  {
+    printf("Funcionario nao alterado!\n");
+  }
+}
+
 void totalSalariosPorCategoria(Reg *funcionarios)
 {
   double totalGerencia = 0;
@@ -358,7 +418,6 @@ void mediaIdadePorCategoria(Reg *funcionarios)
 
 Reg *nomeFuncionarioMaisNovo(Reg *funcionarios)
 {
-
   Reg *funcionarioMaisNovo = &funcionarios[0];
 
   for (int i = 1; i < quantidadeFuncionarios; i++)
@@ -368,6 +427,7 @@ Reg *nomeFuncionarioMaisNovo(Reg *funcionarios)
       funcionarioMaisNovo = &funcionarios[i];
     }
   }
+
   printf("Funcionario mais novo: \n");
   informacoesFuncionario();
   mostrarFuncionario(*funcionarioMaisNovo);
@@ -472,12 +532,12 @@ void menu()
   printf("1- Cadastrar funcionario\n");
   printf("2- Listar funcionarios\n");
   printf("3- Buscar funcionario por nome\n");
-  printf("4- Alterar dados de um funcionario (nao implementado)\n");
+  printf("4- Alterar dados de um funcionario\n");
   printf("5- Deletar funcionario por id\n");
   printf("6- Total de salarios por categoria\n");
-  printf("7- Maior e menor salario por categoria (nao implementado)\n");
-  printf("8- Media de idade por categoria (nao implementado)\n");
-  printf("9- Quantidade de funcionarios por salario (nao implementado)\n");
+  printf("7- Maior e menor salario por categoria\n");
+  printf("8- Media de idade por categoria\n");
+  printf("9- Quantidade de funcionarios por salario\n");
   printf("10- Nome do funcionario mais novo\n");
   printf("11- Sair\n");
 }
@@ -495,7 +555,6 @@ void informacoesFuncionario()
 
 int tamanhoArrayFuncionarios(Reg *funcionarios)
 {
-  // calculate number of elements in array of structs
   int tamanho = 0;
 
   while (funcionarios[tamanho].id != 0)
@@ -577,10 +636,10 @@ void listarFuncionarios(Reg *funcionarios, int pagina, int numeroFuncionarios)
   }
 }
 
-Reg criarFuncionario()
+Reg criarFuncionario(int estaAlterando, int id)
 {
   Reg funcionario;
-  funcionario.id = gerarId();
+
   if (estaAlterando)
   {
     funcionario.id = gerarId();
@@ -589,6 +648,7 @@ Reg criarFuncionario()
   {
     funcionario.id = id;
   }
+
   strcpy(funcionario.nome, cadastraNome());
   funcionario.categoria = cadastraCategoria();
   funcionario.salario = cadastraSalario();
@@ -714,25 +774,13 @@ void limparBuffer()
   }
 }
 
-double Maior_Salario(double a, double b)
+Reg funcionarioComMenorSalario(Reg *funcionarios)
 {
-  double maior;
-  if (a > b)
-  {
-    maior = a;
-  }
-  else
-  {
-    maior = b;
-  }
-  return maior;
-}
+  Reg funcionarioComMenorSalario = funcionarios[0];
 
-double Menor_Salario(double a, double b)
-{
-  double menor;
-  if (a < b)
+  for (int i = 1; i < tamanhoArrayFuncionarios(funcionarios); i++)
   {
+<<<<<<< HEAD
     menor = a;
   }
   else
@@ -749,11 +797,14 @@ void Maior_Menor_Cat(int categoria, Reg *funcionarios, int quantidadeFuncionario
   for (i = 0; i < quantidadeFuncionarios - 1; i++)
   {
     if ((funcionarios[i].categoria == categoria))
+=======
+    if (funcionarios[i].salario < funcionarioComMenorSalario.salario)
+>>>>>>> 83ff056218446a2cc87525e0e72d1274d816e1b3
     {
-      maior = Maior_Salario(funcionarios[i].salario, maior);
-      menor = Menor_Salario(funcionarios[i].salario, menor);
+      funcionarioComMenorSalario = funcionarios[i];
     }
   }
+<<<<<<< HEAD
   for (i = 0; i < quantidadeFuncionarios - 1; i++)
   {
     if ((funcionarios[i].categoria == categoria))
@@ -786,4 +837,91 @@ void Maior_Menor_Cat(int categoria, Reg *funcionarios, int quantidadeFuncionario
     printf("\nO menor salario de operacional e: %lf", menor);
     printf("\n");
   }
+=======
+
+  return funcionarioComMenorSalario;
+}
+
+Reg funcionarioComMaiorSalario(Reg *funcionarios)
+{
+  Reg funcionarioComMaiorSalario = funcionarios[0];
+
+  for (int i = 1; i < tamanhoArrayFuncionarios(funcionarios); i++)
+  {
+    if (funcionarios[i].salario > funcionarioComMaiorSalario.salario)
+    {
+      funcionarioComMaiorSalario = funcionarios[i];
+    }
+  }
+
+  return funcionarioComMaiorSalario;
+}
+
+void funcionariosComMaiorEMenorSalarioPorCategoria(Reg *funcionarios)
+{
+  int quantidadeFuncionariosGerencia = 0;
+  int quantidadeFuncionariosSupervisao = 0;
+  int quantidadeFuncionariosOperacional = 0;
+
+  for (int i = 0; i < quantidadeFuncionarios; i++)
+  {
+    if (funcionarios[i].categoria == 1)
+    {
+      quantidadeFuncionariosGerencia++;
+    }
+    else if (funcionarios[i].categoria == 2)
+    {
+      quantidadeFuncionariosSupervisao++;
+    }
+    else if (funcionarios[i].categoria == 3)
+    {
+      quantidadeFuncionariosOperacional++;
+    }
+  }
+
+  Reg *funcionariosGerencia = malloc(quantidadeFuncionariosGerencia * sizeof(Reg));
+  Reg *funcionariosSupervisao = malloc(quantidadeFuncionariosSupervisao * sizeof(Reg));
+  Reg *funcionariosOperacional = malloc(quantidadeFuncionariosOperacional * sizeof(Reg));
+
+  int indiceFuncionariosGerencia = 0;
+  int indiceFuncionariosSupervisao = 0;
+  int indiceFuncionariosOperacional = 0;
+
+  for (int i = 0; i < quantidadeFuncionarios; i++)
+  {
+    if (funcionarios[i].categoria == 1)
+    {
+      funcionariosGerencia[indiceFuncionariosGerencia] = funcionarios[i];
+      indiceFuncionariosGerencia++;
+    }
+    else if (funcionarios[i].categoria == 2)
+    {
+      funcionariosSupervisao[indiceFuncionariosSupervisao] = funcionarios[i];
+      indiceFuncionariosSupervisao++;
+    }
+    else if (funcionarios[i].categoria == 3)
+    {
+      funcionariosOperacional[indiceFuncionariosOperacional] = funcionarios[i];
+      indiceFuncionariosOperacional++;
+    }
+  }
+
+  Reg funcionarioComMaiorSalarioGerencia = funcionarioComMaiorSalario(funcionariosGerencia);
+  Reg funcionarioComMenorSalarioGerencia = funcionarioComMenorSalario(funcionariosGerencia);
+
+  Reg funcionarioComMaiorSalarioSupervisao = funcionarioComMaiorSalario(funcionariosSupervisao);
+  Reg funcionarioComMenorSalarioSupervisao = funcionarioComMenorSalario(funcionariosSupervisao);
+
+  Reg funcionarioComMaiorSalarioOperacional = funcionarioComMaiorSalario(funcionariosOperacional);
+  Reg funcionarioComMenorSalarioOperacional = funcionarioComMenorSalario(funcionariosOperacional);
+
+  printf("\nFuncionario com maior salario na categoria Gerencia: %d - %s\n", funcionarioComMaiorSalarioGerencia.id, funcionarioComMaiorSalarioGerencia.nome);
+  printf("Funcionario com menor salario na categoria Gerencia: %d - %s\n", funcionarioComMenorSalarioGerencia.id, funcionarioComMenorSalarioGerencia.nome);
+
+  printf("\nFuncionario com maior salario na categoria Supervisao: %d - %s\n", funcionarioComMaiorSalarioSupervisao.id, funcionarioComMaiorSalarioSupervisao.nome);
+  printf("Funcionario com menor salario na categoria Supervisao: %d - %s\n", funcionarioComMenorSalarioSupervisao.id, funcionarioComMenorSalarioSupervisao.nome);
+
+  printf("\nFuncionario com maior salario na categoria Operacional: %d - %s\n", funcionarioComMaiorSalarioOperacional.id, funcionarioComMaiorSalarioOperacional.nome);
+  printf("Funcionario com menor salario na categoria Operacional: %d - %s\n", funcionarioComMenorSalarioOperacional.id, funcionarioComMenorSalarioOperacional.nome);
+>>>>>>> 83ff056218446a2cc87525e0e72d1274d816e1b3
 }
