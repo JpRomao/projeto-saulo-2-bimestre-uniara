@@ -683,3 +683,48 @@ void limparBuffer()
   {
   }
 }
+
+double Maior_Salario(double a, double b)
+{
+  double maior;
+  if (a > b)
+  {
+    maior = a;
+  }
+  else
+  {
+    maior = b;
+  }
+  return maior;
+}
+
+double Menor_Salario(double a, double b)
+{
+  double menor;
+  if (a < b)
+  {
+    menor = a;
+  }
+  else
+  {
+    menor = b;
+  }
+  return menor;
+}
+
+/*
+void Maior_Menor_Cat(int categoria, Reg funcionario[], int contador_funcionarios)
+{
+double maior, menor;
+int i;
+for(i=0;i<contador_funcionarios;i++){
+if(funcionario.salario[i]>funcionario.salario[i+1]){
+maior = funcionario.salario[i];
+}else{
+menor = funcionário.salario[i+1];
+}
+}
+printf("\nO maior salario da categoria %d e: %lf", funcionario[i].categoria, maior);
+printf("\nO menor salario da categoria %d e: %lf", funcionario[i].categoria, menor);
+}
+*/
