@@ -51,6 +51,7 @@ Reg *buscarFuncionarioPorNomeContendo(Reg *funcionarios, Reg *funcionariosEncont
 Reg *adicionarFuncionario(Reg *funcionarios, Reg novoFuncionario);
 Reg *gerarFuncionariosAleatorios(Reg *funcionarios);
 Reg *deletarFuncionario(Reg *funcionarios);
+Reg *nomeFuncionarioMaisNovo(Reg *funcionario);
 /***/
 int tamanhoArrayFuncionarios(Reg *funcionarios);
 
@@ -121,7 +122,7 @@ void menuPrincipal(Reg *funcionarios, int jaFoiOrdenado)
       // quantidadeFuncionariosPorSalario(funcionarios);
       break;
     case 10:
-      // nomeFuncionarioMaisNovo(funcionarios);
+      nomeFuncionarioMaisNovo(funcionarios);
       break;
     case 11:
       printf("Saindo...\n");
@@ -262,6 +263,25 @@ void totalSalariosPorCategoria(Reg *funcionarios)
   printf("Total de salarios categoria Operacional: %.2lf\n", totalOperacional);
 }
 
+Reg *nomeFuncionarioMaisNovo(Reg *funcionarios)
+{
+
+  Reg *funcionarioMaisNovo = &funcionarios[0];
+
+  for (int i = 1; i < quantidadeFuncionarios; i++)
+  {
+    if (funcionarios[i].idade < funcionarioMaisNovo)
+    {
+      funcionarioMaisNovo = &funcionarios[i];
+    }
+  }
+  printf("Funcionario mais novo: \n");
+  informacoesFuncionario();
+  mostrarFuncionario(*funcionarioMaisNovo);
+
+  return funcionarioMaisNovo;
+}
+
 int perguntarSimOuNao()
 {
   int opcao;
@@ -365,7 +385,7 @@ void menu()
   printf("7- Maior e menor salario por categoria (nao implementado)\n");
   printf("8- Media de idade por categoria (nao implementado)\n");
   printf("9- Quantidade de funcionarios por salario (nao implementado)\n");
-  printf("10- Nome do funcionario mais novo (nao implementado)\n");
+  printf("10- Nome do funcionario mais novo\n");
   printf("11- Sair\n");
 }
 
