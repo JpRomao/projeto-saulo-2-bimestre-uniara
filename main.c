@@ -64,6 +64,7 @@ Reg *adicionarFuncionario(Reg *funcionarios, Reg novoFuncionario);
 Reg *gerarFuncionariosAleatorios(Reg *funcionarios);
 Reg *deletarFuncionario(Reg *funcionarios);
 Reg *nomeFuncionarioMaisNovo(Reg *funcionario);
+Reg *alterarFuncionario(Reg *funcionarios);
 /***/
 
 void menuPrincipal(Reg *funcionarios, int jaFoiOrdenado)
@@ -90,8 +91,6 @@ void menuPrincipal(Reg *funcionarios, int jaFoiOrdenado)
     menu();
     scanf("%d", &opcao);
     limparBuffer();
-
-    system("cls");
 
     int pagina = 1;
 
@@ -143,8 +142,6 @@ void menuPrincipal(Reg *funcionarios, int jaFoiOrdenado)
       break;
     }
   } while (opcao != 11);
-
-  free(funcionariosPesquisados);
 }
 
 int main()
@@ -180,11 +177,11 @@ void ordenarPorNome(Reg *funcionarios)
 
 void quantidadeFuncionariosComSalarioMinimo(Reg *funcionarios)
 {
-  const ate2000 = 2000;
-  const ate4000 = 4000;
-  const ate6000 = 6000;
-  const ate8000 = 8000;
-  const mais8000 = 8001;
+  const int ate2000 = 2000;
+  const int ate4000 = 4000;
+  const int ate6000 = 6000;
+  const int ate8000 = 8000;
+  const int mais8000 = 8001;
 
   int quantidadeAte2000 = 0;
   int quantidadeAte4000 = 0;
@@ -291,6 +288,65 @@ Reg *deletarFuncionario(Reg *funcionarios)
 
 Reg *alterarFuncionario(Reg *funcionarios)
 {
+  int idFuncionario = 0;
+
+  printf("Digite o id do funcionario que deseja alterar: ");
+  scanf("%d", &idFuncionario);
+  limparBuffer();
+
+  if (idFuncionario == 0)
+  {
+    printf("Id invalido! Deseja tentar novamente?\n");
+
+    int opcao = perguntarSimOuNao();
+
+    if (opcao)
+    {
+      return alterarFuncionario(funcionarios);
+    }
+  }
+
+  int i = 0;
+
+  printf("Encontrando funcionario...");
+
+  while (funcionarios[i].id != idFuncionario)
+  {
+    i++;
+
+    if (i == quantidadeFuncionarios)
+    {
+      printf("Funcionario nao encontrado! Deseja tentar novamente?\n");
+
+      int opcao = perguntarSimOuNao();
+
+      if (opcao)
+      {
+        return alterarFuncionario(funcionarios);
+      }
+    }
+  }
+
+  printf("Deseja realmente alterar o funcionario %s?\n", funcionarios[i].nome);
+
+  int opcao = perguntarSimOuNao();
+
+  if (opcao)
+  {
+    int estaAlterando = 1;
+
+    Reg novoFuncionario = criarFuncionario(estaAlterando, funcionarios[i].id);
+
+    funcionarios[i] = novoFuncionario;
+
+    printf("Funcionario alterado com sucesso!\n");
+
+    return funcionarios;
+  }
+  else
+  {
+    printf("Funcionario nao alterado!\n");
+  }
 }
 
 void totalSalariosPorCategoria(Reg *funcionarios)
