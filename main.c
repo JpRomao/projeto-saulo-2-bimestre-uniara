@@ -130,7 +130,7 @@ void menuPrincipal(Reg *funcionarios, int jaFoiOrdenado)
       mediaIdadePorCategoria(funcionarios);
       break;
     case 9:
-      quantidadeFuncionariosPorSalario(funcionarios);
+      quantidadeFuncionariosComSalarioMinimo(funcionarios);
       break;
     case 10:
       nomeFuncionarioMaisNovo(funcionarios);
@@ -476,12 +476,12 @@ void menu()
   printf("1- Cadastrar funcionario\n");
   printf("2- Listar funcionarios\n");
   printf("3- Buscar funcionario por nome\n");
-  printf("4- Alterar dados de um funcionario (nao implementado)\n");
+  printf("4- Alterar dados de um funcionario\n");
   printf("5- Deletar funcionario por id\n");
   printf("6- Total de salarios por categoria\n");
-  printf("7- Maior e menor salario por categoria (nao implementado)\n");
-  printf("8- Media de idade por categoria (nao implementado)\n");
-  printf("9- Quantidade de funcionarios por salario (nao implementado)\n");
+  printf("7- Maior e menor salario por categoria\n");
+  printf("8- Media de idade por categoria\n");
+  printf("9- Quantidade de funcionarios por salario\n");
   printf("10- Nome do funcionario mais novo\n");
   printf("11- Sair\n");
 }
