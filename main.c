@@ -47,7 +47,8 @@ char *cadastraNome();
 char *nomeCategoria(int categoria);
 char *transformarStringParaMinusculo(char *string);
 double cadastraSalario();
-Reg criarFuncionario();
+void quantidadeFuncionariosComSalarioMinimo(Reg *funcionarios);
+Reg criarFuncionario(int estaAlterando, int id);
 Reg criarFuncionarioAleatorio();
 Reg *buscarFuncionarioPorNomeContendo(Reg *funcionarios, Reg *funcionariosEncontrados, int *quantidadeFuncionariosEncontrados);
 Reg *adicionarFuncionario(Reg *funcionarios, Reg novoFuncionario);
@@ -112,7 +113,7 @@ void menuPrincipal(Reg *funcionarios, int jaFoiOrdenado)
       deletarFuncionario(funcionarios);
       break;
     case 6:
-      totalSalariosPorCategoria(funcionarios);
+      quantidadeFuncionariosComSalarioMinimo(funcionarios);
       break;
     case 7:
       // maiorMenorSalarioPorCategoria(funcionarios);
@@ -121,7 +122,7 @@ void menuPrincipal(Reg *funcionarios, int jaFoiOrdenado)
       // mediaIdadePorCategoria(funcionarios);
       break;
     case 9:
-      // quantidadeFuncionariosPorSalario(funcionarios);
+      quantidadeFuncionariosPorSalario(funcionarios);
       break;
     case 10:
       nomeFuncionarioMaisNovo(funcionarios);
@@ -168,6 +169,51 @@ void ordenarPorNome(Reg *funcionarios)
       }
     }
   }
+}
+
+void quantidadeFuncionariosComSalarioMinimo(Reg *funcionarios)
+{
+  const ate2000 = 2000;
+  const ate4000 = 4000;
+  const ate6000 = 6000;
+  const ate8000 = 8000;
+  const mais8000 = 8001;
+
+  int quantidadeAte2000 = 0;
+  int quantidadeAte4000 = 0;
+  int quantidadeAte6000 = 0;
+  int quantidadeAte8000 = 0;
+  int quantidadeMais8000 = 0;
+
+  for (int i = 0; i < quantidadeFuncionarios; i++)
+  {
+    if (funcionarios[i].salario <= ate2000)
+    {
+      quantidadeAte2000++;
+    }
+    else if (funcionarios[i].salario <= ate4000)
+    {
+      quantidadeAte4000++;
+    }
+    else if (funcionarios[i].salario <= ate6000)
+    {
+      quantidadeAte6000++;
+    }
+    else if (funcionarios[i].salario <= ate8000)
+    {
+      quantidadeAte8000++;
+    }
+    else
+    {
+      quantidadeMais8000++;
+    }
+  }
+
+  printf("Quantidade de funcionarios com salario ate 2000: %d\n", quantidadeAte2000);
+  printf("Quantidade de funcionarios com salario ate 4000: %d\n", quantidadeAte4000);
+  printf("Quantidade de funcionarios com salario ate 6000: %d\n", quantidadeAte6000);
+  printf("Quantidade de funcionarios com salario ate 8000: %d\n", quantidadeAte8000);
+  printf("Quantidade de funcionarios com salario acima de 8000: %d\n", quantidadeMais8000);
 }
 
 Reg *deletarFuncionario(Reg *funcionarios)
@@ -559,6 +605,7 @@ Reg criarFuncionario(int estaAlterando, int id)
   {
     funcionario.id = id;
   }
+
   strcpy(funcionario.nome, cadastraNome());
   funcionario.categoria = cadastraCategoria();
   funcionario.salario = cadastraSalario();
