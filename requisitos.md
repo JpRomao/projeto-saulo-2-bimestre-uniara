@@ -9,15 +9,12 @@ RF
 [] - Deve ser possível listar o total dos salários por categoria
 [] - Deve ser possível conseguir a média de idade por categoria
 [] - Deve ser possível conseguir o maior e menor salário por categoria
-[] - Deve ser possível conseguir a quantidade de funcionários que recebem salário mínimo
-
-<!-- Este requisito funcional abaixo está em análise -->
-<!-- [] - Deve ser possível conseguir a quantidade de funcionários que recebem salários:
-  -[] - até 2000
-  -[] - até 4000
-  -[] - até 6000
-  -[] - até 8000
-  -[] - acima de 8000 -->
+[x] - Deve ser possível conseguir a quantidade de funcionários que recebem salários:
+  -[x] - até 2000
+  -[x] - até 4000
+  -[x] - até 6000
+  -[x] - até 8000
+  -[x] - acima de 8000
 
 RNF
 [x] - Todas as listagens devem ser paginadas com 20 itens por página

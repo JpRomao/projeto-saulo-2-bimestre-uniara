@@ -47,7 +47,7 @@ char *cadastraNome();
 char *nomeCategoria(int categoria);
 char *transformarStringParaMinusculo(char *string);
 double cadastraSalario();
-void quantidadeFuncionariosComSalarioMinimo(Reg *funcionarios);
+void quantidadeFuncionariosComSalarioMinimoPorCategoria(Reg *funcionarios);
 Reg criarFuncionario(int estaAlterando, int id);
 Reg criarFuncionarioAleatorio();
 Reg *buscarFuncionarioPorNomeContendo(Reg *funcionarios, Reg *funcionariosEncontrados, int *quantidadeFuncionariosEncontrados);
@@ -113,7 +113,7 @@ void menuPrincipal(Reg *funcionarios, int jaFoiOrdenado)
       deletarFuncionario(funcionarios);
       break;
     case 6:
-      quantidadeFuncionariosComSalarioMinimo(funcionarios);
+      quantidadeFuncionariosComSalarioMinimoPorCategoria(funcionarios);
       break;
     case 7:
       // maiorMenorSalarioPorCategoria(funcionarios);
@@ -171,13 +171,13 @@ void ordenarPorNome(Reg *funcionarios)
   }
 }
 
-void quantidadeFuncionariosComSalarioMinimo(Reg *funcionarios)
+void quantidadeFuncionariosComSalarioMinimoPorCategoria(Reg *funcionarios)
 {
-  const ate2000 = 2000;
-  const ate4000 = 4000;
-  const ate6000 = 6000;
-  const ate8000 = 8000;
-  const mais8000 = 8001;
+  const int ate2000 = 2000;
+  const int ate4000 = 4000;
+  const int ate6000 = 6000;
+  const int ate8000 = 8000;
+  const int mais8000 = 8001;
 
   int quantidadeAte2000 = 0;
   int quantidadeAte4000 = 0;
