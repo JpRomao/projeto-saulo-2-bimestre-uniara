@@ -39,8 +39,8 @@ void menu();
 void ordenarPorNome(Reg *funcionarios);
 <<<<<<< HEAD
 void Maior_Menor_Cat(int categoria, Reg *funcionarios, int quantidadeFuncionarios);
-=======
-void totalSalariosPorCategoria(Reg *funcionarios);
+== == == =
+             void totalSalariosPorCategoria(Reg * funcionarios);
 void mediaIdadePorCategoria(Reg *funcionarios);
 >>>>>>> 8c06d9564c337d616152016984f1098ec38f91c6
 int gerarId();
@@ -55,8 +55,8 @@ double cadastraSalario();
 double Menor_Salario(double a, double b);
 double Maior_Salario(double a, double b);
 Reg criarFuncionario();
-=======
-void quantidadeFuncionariosComSalarioMinimo(Reg *funcionarios);
+== == == =
+             void quantidadeFuncionariosComSalarioMinimo(Reg * funcionarios);
 Reg criarFuncionario(int estaAlterando, int id);
 >>>>>>> 8c06d9564c337d616152016984f1098ec38f91c6
 Reg criarFuncionarioAleatorio();
@@ -589,8 +589,8 @@ Reg criarFuncionario()
 
 <<<<<<< HEAD
   funcionario.id = gerarId();
-=======
-  if (estaAlterando)
+  == == == =
+               if (estaAlterando)
   {
     funcionario.id = gerarId();
   }
@@ -759,13 +759,13 @@ void Maior_Menor_Cat(int categoria, Reg *funcionarios, int quantidadeFuncionario
   double maior, menor;
   for (i = 0; i < quantidadeFuncionarios; i++)
   {
-    if ((funcionarios.salario[i] > maior) && (funcionarios.categoria[i] == categoria))
+    if ((funcionarios[i].salario > maior) && (funcionarios[i].categoria == categoria))
     {
-      maior = funcionarios.salario[i];
+      maior = funcionarios[i].salario;
     }
-    else if ((funcionarios.salario[i] < menor) && (funcionarios.categoria[i] == categoria))
+    else if ((funcionarios[i].salario < menor) && (funcionarios[i].categoria == categoria))
     {
-      menor = funcionarios.salario[i + 1];
+      menor = funcionarios[i].salario;
     }
   }
   if (categoria == 1)
@@ -788,10 +788,10 @@ void Maior_Menor_Cat(int categoria, Reg *funcionarios, int quantidadeFuncionario
   }
 }
 <<<<<<< HEAD
-=======
+== == == =
 }
 printf("\nO maior salario da categoria %d e: %lf", funcionario[i].categoria, maior);
 printf("\nO menor salario da categoria %d e: %lf", funcionario[i].categoria, menor);
 }
-*/
+* /
 >>>>>>> 8c06d9564c337d616152016984f1098ec38f91c6
