@@ -121,12 +121,9 @@ void menuPrincipal(Reg *funcionarios, int jaFoiOrdenado)
       quantidadeFuncionariosComSalarioMinimo(funcionarios);
       break;
     case 7:
-      int categ = 1;
-      Maior_Menor_Cat(int categ, Reg *funcionarios, int quantidadeFuncionarios);
-      categ = 2;
-      Maior_Menor_Cat(int categ, Reg *funcionarios, int quantidadeFuncionarios);
-      categ = 3;
-      Maior_Menor_Cat(int categ, Reg *funcionarios, int quantidadeFuncionarios);
+      Maior_Menor_Cat(1, *funcionarios, quantidadeFuncionarios);
+      Maior_Menor_Cat(2, *funcionarios, quantidadeFuncionarios);
+      Maior_Menor_Cat(3, *funcionarios, quantidadeFuncionarios);
       break;
     case 8:
       mediaIdadePorCategoria(funcionarios);
@@ -748,16 +745,13 @@ double Menor_Salario(double a, double b)
 void Maior_Menor_Cat(int categoria, Reg *funcionarios, int quantidadeFuncionarios)
 {
   int i = quantidadeFuncionarios - 1;
-  double maior, menor;
+  double maior = 0, menor = 1000000;
   for (i = 0; i < quantidadeFuncionarios; i++)
   {
-    if ((funcionarios[i].salario > maior) && (funcionarios[i].categoria == categoria))
+    if ((funcionarios[i].categoria == categoria))
     {
-      maior = funcionarios[i].salario;
-    }
-    else if ((funcionarios[i].salario < menor) && (funcionarios[i].categoria == categoria))
-    {
-      menor = funcionarios[i].salario;
+      maior = Maior_Salario(funcionarios[i].salario, maior);
+      menor = Menor_Salario(funcionarios[i].salario, menor);
     }
   }
   if (categoria == 1)
