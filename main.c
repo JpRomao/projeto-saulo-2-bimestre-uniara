@@ -45,6 +45,7 @@ int gerarId();
 int cadastraIdade();
 int cadastraCategoria();
 int perguntarSimOuNao();
+int tamanhoArrayFuncionarios(Reg *funcionarios);
 char *cadastraNome();
 char *nomeCategoria(int categoria);
 char *transformarStringParaMinusculo(char *string);
@@ -57,10 +58,8 @@ Reg *buscarFuncionarioPorNomeContendo(Reg *funcionarios, Reg *funcionariosEncont
 Reg *adicionarFuncionario(Reg *funcionarios, Reg novoFuncionario);
 Reg *gerarFuncionariosAleatorios(Reg *funcionarios);
 Reg *deletarFuncionario(Reg *funcionarios);
-
 Reg *nomeFuncionarioMaisNovo(Reg *funcionario);
 /***/
-int tamanhoArrayFuncionarios(Reg *funcionarios);
 
 void menuPrincipal(Reg *funcionarios, int jaFoiOrdenado)
 {
@@ -110,15 +109,14 @@ void menuPrincipal(Reg *funcionarios, int jaFoiOrdenado)
       listarFuncionarios(funcionariosPesquisados, pagina, quantidadeFuncionariosPesquisados);
       break;
     case 4:
-      funcionarios = alterarFuncionario(funcionarios);
-
+      alterarFuncionario(funcionarios);
       jaFoiOrdenado = 0;
       break;
     case 5:
       deletarFuncionario(funcionarios);
       break;
     case 6:
-      quantidadeFuncionariosComSalarioMinimo(funcionarios);
+      totalSalariosPorCategoria(funcionarios);
       break;
     case 7:
       funcionariosComMaiorEMenorSalarioPorCategoria(funcionarios);
@@ -135,7 +133,6 @@ void menuPrincipal(Reg *funcionarios, int jaFoiOrdenado)
     case 11:
       printf("Saindo...\n");
       break;
-
     default:
       printf("Opcao invalida!\n");
       break;
@@ -159,6 +156,7 @@ int main()
 }
 
 /** Implementação das funções */
+
 void ordenarPorNome(Reg *funcionarios)
 {
   for (int i = 0; i < quantidadeFuncionarios; i++)
@@ -177,11 +175,11 @@ void ordenarPorNome(Reg *funcionarios)
 
 void quantidadeFuncionariosComSalarioMinimo(Reg *funcionarios)
 {
-  const int ate2000 = 2000;
-  const int ate4000 = 4000;
-  const int ate6000 = 6000;
-  const int ate8000 = 8000;
-  const int mais8000 = 8001;
+  const ate2000 = 2000;
+  const ate4000 = 4000;
+  const ate6000 = 6000;
+  const ate8000 = 8000;
+  const mais8000 = 8001;
 
   int quantidadeAte2000 = 0;
   int quantidadeAte4000 = 0;
@@ -218,55 +216,6 @@ void quantidadeFuncionariosComSalarioMinimo(Reg *funcionarios)
   printf("Quantidade de funcionarios com salario ate 6000: %d\n", quantidadeAte6000);
   printf("Quantidade de funcionarios com salario ate 8000: %d\n", quantidadeAte8000);
   printf("Quantidade de funcionarios com salario acima de 8000: %d\n", quantidadeMais8000);
-}
-
-Reg *alterarFuncionario(Reg *funcionarios)
-{
-  int idFuncionario = 0;
-
-  printf("Digite o id do funcionario que deseja alterar: ");
-  scanf("%d", &idFuncionario);
-  limparBuffer();
-
-  if (idFuncionario == 0)
-  {
-    printf("Id invalido! Deseja tentar novamente?\n");
-
-    int opcao = perguntarSimOuNao();
-
-    if (opcao)
-    {
-      return alterarFuncionario(funcionarios);
-    }
-  }
-
-  int i = 0;
-
-  printf("Encontrando funcionario...");
-
-  while (funcionarios[i].id != idFuncionario)
-  {
-    i++;
-
-    if (i == quantidadeFuncionarios)
-    {
-      printf("Funcionario nao encontrado! Deseja tentar novamente?\n");
-
-      int opcao = perguntarSimOuNao();
-
-      if (opcao)
-      {
-        return alterarFuncionario(funcionarios);
-      }
-    }
-  }
-
-  printf("Funcionario encontrado!\n");
-
-  int estaAlterando = 1;
-  funcionarios[i] = criarFuncionario(estaAlterando, funcionarios[i].id);
-
-  return funcionarios;
 }
 
 Reg *deletarFuncionario(Reg *funcionarios)
@@ -333,6 +282,10 @@ Reg *deletarFuncionario(Reg *funcionarios)
   }
 
   return funcionarios;
+}
+
+Reg *alterarFuncionario(Reg *funcionarios)
+{
 }
 
 void totalSalariosPorCategoria(Reg *funcionarios)
@@ -404,7 +357,6 @@ void mediaIdadePorCategoria(Reg *funcionarios)
 
 Reg *nomeFuncionarioMaisNovo(Reg *funcionarios)
 {
-
   Reg *funcionarioMaisNovo = &funcionarios[0];
 
   for (int i = 1; i < quantidadeFuncionarios; i++)
@@ -414,6 +366,7 @@ Reg *nomeFuncionarioMaisNovo(Reg *funcionarios)
       funcionarioMaisNovo = &funcionarios[i];
     }
   }
+
   printf("Funcionario mais novo: \n");
   informacoesFuncionario();
   mostrarFuncionario(*funcionarioMaisNovo);
@@ -541,7 +494,6 @@ void informacoesFuncionario()
 
 int tamanhoArrayFuncionarios(Reg *funcionarios)
 {
-  // calculate number of elements in array of structs
   int tamanho = 0;
 
   while (funcionarios[tamanho].id != 0)
