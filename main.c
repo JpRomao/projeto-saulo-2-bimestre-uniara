@@ -40,7 +40,6 @@ void ordenarPorNome(Reg *funcionarios);
 void Maior_Menor_Cat(int categoria, Reg *funcionarios, int quantidadeFuncionarios);
 void totalSalariosPorCategoria(Reg *funcionarios);
 void mediaIdadePorCategoria(Reg *funcionarios);
-void quantidadeFuncionariosComSalarioMinimo(Reg *funcionarios);
 int gerarId();
 int cadastraIdade();
 int cadastraCategoria();
@@ -51,6 +50,8 @@ char *transformarStringParaMinusculo(char *string);
 double cadastraSalario();
 double Menor_Salario(double a, double b);
 double Maior_Salario(double a, double b);
+void quantidadeFuncionariosComSalarioMinimo(Reg *funcionarios);
+Reg criarFuncionario();
 Reg criarFuncionario(int estaAlterando, int id);
 Reg criarFuncionarioAleatorio();
 Reg *buscarFuncionarioPorNomeContendo(Reg *funcionarios, Reg *funcionariosEncontrados, int *quantidadeFuncionariosEncontrados);
@@ -110,20 +111,22 @@ void menuPrincipal(Reg *funcionarios, int jaFoiOrdenado)
       listarFuncionarios(funcionariosPesquisados, pagina, quantidadeFuncionariosPesquisados);
       break;
     case 4:
-      funcionarios = alterarFuncionario(funcionarios);
-
-      jaFoiOrdenado = 0;
+      // alterarFuncionario(funcionarios, idFuncionario);
+      // jaFoiOrdenado = 0;
       break;
     case 5:
       deletarFuncionario(funcionarios);
       break;
     case 6:
-      quantidadeFuncionariosComSalarioMinimoPorCategoria(funcionarios);
+      quantidadeFuncionariosComSalarioMinimo(funcionarios);
       break;
     case 7:
-      // Maior_Menor_Cat(int 1, Reg *funcionarios, int quantidadeFuncionarios);
-      // Maior_Menor_Cat(int 2, Reg *funcionarios, int quantidadeFuncionarios);
-      // Maior_Menor_Cat(int 3, Reg *funcionarios, int quantidadeFuncionarios);
+      int categ = 1;
+      Maior_Menor_Cat(int categ, Reg *funcionarios, int quantidadeFuncionarios);
+      categ = 2;
+      Maior_Menor_Cat(int categ, Reg *funcionarios, int quantidadeFuncionarios);
+      categ = 3;
+      Maior_Menor_Cat(int categ, Reg *funcionarios, int quantidadeFuncionarios);
       break;
     case 8:
       mediaIdadePorCategoria(funcionarios);
@@ -161,6 +164,7 @@ int main()
 }
 
 /** Implementação das funções */
+
 void ordenarPorNome(Reg *funcionarios)
 {
   for (int i = 0; i < quantidadeFuncionarios; i++)
@@ -177,13 +181,13 @@ void ordenarPorNome(Reg *funcionarios)
   }
 }
 
-void quantidadeFuncionariosComSalarioMinimoPorCategoria(Reg *funcionarios)
+void quantidadeFuncionariosComSalarioMinimo(Reg *funcionarios)
 {
-  const int ate2000 = 2000;
-  const int ate4000 = 4000;
-  const int ate6000 = 6000;
-  const int ate8000 = 8000;
-  const int mais8000 = 8001;
+  const ate2000 = 2000;
+  const ate4000 = 4000;
+  const ate6000 = 6000;
+  const ate8000 = 8000;
+  const mais8000 = 8001;
 
   int quantidadeAte2000 = 0;
   int quantidadeAte4000 = 0;
@@ -220,55 +224,6 @@ void quantidadeFuncionariosComSalarioMinimoPorCategoria(Reg *funcionarios)
   printf("Quantidade de funcionarios com salario ate 6000: %d\n", quantidadeAte6000);
   printf("Quantidade de funcionarios com salario ate 8000: %d\n", quantidadeAte8000);
   printf("Quantidade de funcionarios com salario acima de 8000: %d\n", quantidadeMais8000);
-}
-
-Reg *alterarFuncionario(Reg *funcionarios)
-{
-  int idFuncionario = 0;
-
-  printf("Digite o id do funcionario que deseja alterar: ");
-  scanf("%d", &idFuncionario);
-  limparBuffer();
-
-  if (idFuncionario == 0)
-  {
-    printf("Id invalido! Deseja tentar novamente?\n");
-
-    int opcao = perguntarSimOuNao();
-
-    if (opcao)
-    {
-      return alterarFuncionario(funcionarios);
-    }
-  }
-
-  int i = 0;
-
-  printf("Encontrando funcionario...");
-
-  while (funcionarios[i].id != idFuncionario)
-  {
-    i++;
-
-    if (i == quantidadeFuncionarios)
-    {
-      printf("Funcionario nao encontrado! Deseja tentar novamente?\n");
-
-      int opcao = perguntarSimOuNao();
-
-      if (opcao)
-      {
-        return alterarFuncionario(funcionarios);
-      }
-    }
-  }
-
-  printf("Funcionario encontrado!\n");
-
-  int estaAlterando = 1;
-  funcionarios[i] = criarFuncionario(estaAlterando, funcionarios[i].id);
-
-  return funcionarios;
 }
 
 Reg *deletarFuncionario(Reg *funcionarios)
@@ -625,10 +580,10 @@ void listarFuncionarios(Reg *funcionarios, int pagina, int numeroFuncionarios)
   }
 }
 
-Reg criarFuncionario(int estaAlterando, int id)
+Reg criarFuncionario()
 {
   Reg funcionario;
-
+  funcionario.id = gerarId();
   if (estaAlterando)
   {
     funcionario.id = gerarId();
@@ -637,7 +592,6 @@ Reg criarFuncionario(int estaAlterando, int id)
   {
     funcionario.id = id;
   }
-
   strcpy(funcionario.nome, cadastraNome());
   funcionario.categoria = cadastraCategoria();
   funcionario.salario = cadastraSalario();
@@ -791,40 +745,37 @@ double Menor_Salario(double a, double b)
   return menor;
 }
 
-// void Maior_Menor_Cat(int categoria, Reg *funcionarios, int quantidadeFuncionarios)
-// {
-//   int i = quantidadeFuncionarios - 1;
-//   double maior, menor;
-//   for (i = 0; i < quantidadeFuncionarios; i++)
-//   {
-//     if ((funcionarios[i].salario > maior) && (funcionarios[i].categoria == categoria))
-//     {
-//       maior = funcionarios[i].salario;
-//     }
-//     else if ((funcionarios[i].salario < menor) && (funcionarios[i].categoria == categoria))
-//     {
-//       menor = funcionarios[i].salario;
-//     }
-//   }
-//   if (categoria == 1)
-//   {
-//     printf("\nO maior salario de gerencia e: %lf", maior);
-//     printf("\nO menor salario de gerencia e: %lf", menor);
-//     printf("\n");
-//   }
-//   if (categoria == 2)
-//   {
-//     printf("\nO maior salario de supervisao e: %lf", maior);
-//     printf("\nO menor salario de supervisao e: %lf", menor);
-//     printf("\n");
-//   }
-//   if (categoria == 3)
-//   {
-//     printf("\nO maior salario de operacional e: %lf", maior);
-//     printf("\nO menor salario de operacional e: %lf", menor);
-//     printf("\n");
-//   }
-
-//   printf("\nO maior salario da categoria %d e: %lf", funcionario[i].categoria, maior);
-//   printf("\nO menor salario da categoria %d e: %lf", funcionario[i].categoria, menor);
-// }
+void Maior_Menor_Cat(int categoria, Reg *funcionarios, int quantidadeFuncionarios)
+{
+  int i = quantidadeFuncionarios - 1;
+  double maior, menor;
+  for (i = 0; i < quantidadeFuncionarios; i++)
+  {
+    if ((funcionarios[i].salario > maior) && (funcionarios[i].categoria == categoria))
+    {
+      maior = funcionarios[i].salario;
+    }
+    else if ((funcionarios[i].salario < menor) && (funcionarios[i].categoria == categoria))
+    {
+      menor = funcionarios[i].salario;
+    }
+  }
+  if (categoria == 1)
+  {
+    printf("\nO maior salario de gerencia e: %lf", maior);
+    printf("\nO menor salario de gerencia e: %lf", menor);
+    printf("\n");
+  }
+  if (categoria == 2)
+  {
+    printf("\nO maior salario de supervisao e: %lf", maior);
+    printf("\nO menor salario de supervisao e: %lf", menor);
+    printf("\n");
+  }
+  if (categoria == 3)
+  {
+    printf("\nO maior salario de operacional e: %lf", maior);
+    printf("\nO menor salario de operacional e: %lf", menor);
+    printf("\n");
+  }
+}
