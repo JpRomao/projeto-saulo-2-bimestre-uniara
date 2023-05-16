@@ -1,3 +1,8 @@
+/**
+ * Projeto no GitHub: https://github.com/JpRomao/projeto-saulo-2-bimestre-uniara
+ * Documentação do projeto: https://fourth-metatarsal-651.notion.site/Documenta-o-projeto-Saulo-2-Bimestre-e3cbab03739943ab84ff2f65410a589a
+ */
+
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
