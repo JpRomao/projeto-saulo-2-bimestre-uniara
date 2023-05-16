@@ -95,7 +95,7 @@ void menuPrincipal(Reg *funcionarios, int jaFoiOrdenado)
     switch (opcao)
     {
     case 1:
-      funcionarios = adicionarFuncionario(funcionarios, criarFuncionario());
+      funcionarios = adicionarFuncionario(funcionarios, criarFuncionario(0, 0));
 
       jaFoiOrdenado = 0;
       break;
