@@ -121,9 +121,9 @@ void menuPrincipal(Reg *funcionarios, int jaFoiOrdenado)
       quantidadeFuncionariosComSalarioMinimo(funcionarios);
       break;
     case 7:
-      Maior_Menor_Cat(1, *funcionarios, quantidadeFuncionarios);
-      Maior_Menor_Cat(2, *funcionarios, quantidadeFuncionarios);
-      Maior_Menor_Cat(3, *funcionarios, quantidadeFuncionarios);
+      Maior_Menor_Cat(1, funcionarios, quantidadeFuncionarios);
+      Maior_Menor_Cat(2, funcionarios, quantidadeFuncionarios);
+      Maior_Menor_Cat(3, funcionarios, quantidadeFuncionarios);
       break;
     case 8:
       mediaIdadePorCategoria(funcionarios);
