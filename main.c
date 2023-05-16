@@ -37,10 +37,10 @@ void listarFuncionarios(Reg *funcionarios, int pagina, int numeroFuncionarios);
 void mostrarFuncionario(Reg funcionario);
 void menu();
 void ordenarPorNome(Reg *funcionarios);
-void Maior_Menor_Cat(int categoria, Reg *funcionarios, int quantidadeFuncionarios);
 void totalSalariosPorCategoria(Reg *funcionarios);
 void mediaIdadePorCategoria(Reg *funcionarios);
 void quantidadeFuncionariosComSalarioMinimo(Reg *funcionarios);
+void funcionariosComMaiorEMenorSalarioPorCategoria(Reg *funcionarios);
 int gerarId();
 int cadastraIdade();
 int cadastraCategoria();
@@ -49,10 +49,10 @@ char *cadastraNome();
 char *nomeCategoria(int categoria);
 char *transformarStringParaMinusculo(char *string);
 double cadastraSalario();
-double Menor_Salario(double a, double b);
-double Maior_Salario(double a, double b);
 Reg criarFuncionario(int estaAlterando, int id);
 Reg criarFuncionarioAleatorio();
+Reg funcionarioComMaiorSalario(Reg *funcionarios);
+Reg funcionarioComMenorSalario(Reg *funcionarios);
 Reg *buscarFuncionarioPorNomeContendo(Reg *funcionarios, Reg *funcionariosEncontrados, int *quantidadeFuncionariosEncontrados);
 Reg *adicionarFuncionario(Reg *funcionarios, Reg novoFuncionario);
 Reg *gerarFuncionariosAleatorios(Reg *funcionarios);
@@ -118,12 +118,10 @@ void menuPrincipal(Reg *funcionarios, int jaFoiOrdenado)
       deletarFuncionario(funcionarios);
       break;
     case 6:
-      quantidadeFuncionariosComSalarioMinimoPorCategoria(funcionarios);
+      quantidadeFuncionariosComSalarioMinimo(funcionarios);
       break;
     case 7:
-      // Maior_Menor_Cat(int 1, Reg *funcionarios, int quantidadeFuncionarios);
-      // Maior_Menor_Cat(int 2, Reg *funcionarios, int quantidadeFuncionarios);
-      // Maior_Menor_Cat(int 3, Reg *funcionarios, int quantidadeFuncionarios);
+      funcionariosComMaiorEMenorSalarioPorCategoria(funcionarios);
       break;
     case 8:
       mediaIdadePorCategoria(funcionarios);
@@ -177,7 +175,7 @@ void ordenarPorNome(Reg *funcionarios)
   }
 }
 
-void quantidadeFuncionariosComSalarioMinimoPorCategoria(Reg *funcionarios)
+void quantidadeFuncionariosComSalarioMinimo(Reg *funcionarios)
 {
   const int ate2000 = 2000;
   const int ate4000 = 4000;
@@ -763,68 +761,100 @@ void limparBuffer()
   }
 }
 
-double Maior_Salario(double a, double b)
+Reg funcionarioComMenorSalario(Reg *funcionarios)
 {
-  double maior;
-  if (a > b)
+  Reg funcionarioComMenorSalario = funcionarios[0];
+
+  for (int i = 1; i < tamanhoArrayFuncionarios(funcionarios); i++)
   {
-    maior = a;
+    if (funcionarios[i].salario < funcionarioComMenorSalario.salario)
+    {
+      funcionarioComMenorSalario = funcionarios[i];
+    }
   }
-  else
-  {
-    maior = b;
-  }
-  return maior;
+
+  return funcionarioComMenorSalario;
 }
 
-double Menor_Salario(double a, double b)
+Reg funcionarioComMaiorSalario(Reg *funcionarios)
 {
-  double menor;
-  if (a < b)
+  Reg funcionarioComMaiorSalario = funcionarios[0];
+
+  for (int i = 1; i < tamanhoArrayFuncionarios(funcionarios); i++)
   {
-    menor = a;
+    if (funcionarios[i].salario > funcionarioComMaiorSalario.salario)
+    {
+      funcionarioComMaiorSalario = funcionarios[i];
+    }
   }
-  else
-  {
-    menor = b;
-  }
-  return menor;
+
+  return funcionarioComMaiorSalario;
 }
 
-// void Maior_Menor_Cat(int categoria, Reg *funcionarios, int quantidadeFuncionarios)
-// {
-//   int i = quantidadeFuncionarios - 1;
-//   double maior, menor;
-//   for (i = 0; i < quantidadeFuncionarios; i++)
-//   {
-//     if ((funcionarios[i].salario > maior) && (funcionarios[i].categoria == categoria))
-//     {
-//       maior = funcionarios[i].salario;
-//     }
-//     else if ((funcionarios[i].salario < menor) && (funcionarios[i].categoria == categoria))
-//     {
-//       menor = funcionarios[i].salario;
-//     }
-//   }
-//   if (categoria == 1)
-//   {
-//     printf("\nO maior salario de gerencia e: %lf", maior);
-//     printf("\nO menor salario de gerencia e: %lf", menor);
-//     printf("\n");
-//   }
-//   if (categoria == 2)
-//   {
-//     printf("\nO maior salario de supervisao e: %lf", maior);
-//     printf("\nO menor salario de supervisao e: %lf", menor);
-//     printf("\n");
-//   }
-//   if (categoria == 3)
-//   {
-//     printf("\nO maior salario de operacional e: %lf", maior);
-//     printf("\nO menor salario de operacional e: %lf", menor);
-//     printf("\n");
-//   }
+void funcionariosComMaiorEMenorSalarioPorCategoria(Reg *funcionarios)
+{
+  int quantidadeFuncionariosGerencia = 0;
+  int quantidadeFuncionariosSupervisao = 0;
+  int quantidadeFuncionariosOperacional = 0;
 
-//   printf("\nO maior salario da categoria %d e: %lf", funcionario[i].categoria, maior);
-//   printf("\nO menor salario da categoria %d e: %lf", funcionario[i].categoria, menor);
-// }
+  for (int i = 0; i < quantidadeFuncionarios; i++)
+  {
+    if (funcionarios[i].categoria == 1)
+    {
+      quantidadeFuncionariosGerencia++;
+    }
+    else if (funcionarios[i].categoria == 2)
+    {
+      quantidadeFuncionariosSupervisao++;
+    }
+    else if (funcionarios[i].categoria == 3)
+    {
+      quantidadeFuncionariosOperacional++;
+    }
+  }
+
+  Reg *funcionariosGerencia = malloc(quantidadeFuncionariosGerencia * sizeof(Reg));
+  Reg *funcionariosSupervisao = malloc(quantidadeFuncionariosSupervisao * sizeof(Reg));
+  Reg *funcionariosOperacional = malloc(quantidadeFuncionariosOperacional * sizeof(Reg));
+
+  int indiceFuncionariosGerencia = 0;
+  int indiceFuncionariosSupervisao = 0;
+  int indiceFuncionariosOperacional = 0;
+
+  for (int i = 0; i < quantidadeFuncionarios; i++)
+  {
+    if (funcionarios[i].categoria == 1)
+    {
+      funcionariosGerencia[indiceFuncionariosGerencia] = funcionarios[i];
+      indiceFuncionariosGerencia++;
+    }
+    else if (funcionarios[i].categoria == 2)
+    {
+      funcionariosSupervisao[indiceFuncionariosSupervisao] = funcionarios[i];
+      indiceFuncionariosSupervisao++;
+    }
+    else if (funcionarios[i].categoria == 3)
+    {
+      funcionariosOperacional[indiceFuncionariosOperacional] = funcionarios[i];
+      indiceFuncionariosOperacional++;
+    }
+  }
+
+  Reg funcionarioComMaiorSalarioGerencia = funcionarioComMaiorSalario(funcionariosGerencia);
+  Reg funcionarioComMenorSalarioGerencia = funcionarioComMenorSalario(funcionariosGerencia);
+
+  Reg funcionarioComMaiorSalarioSupervisao = funcionarioComMaiorSalario(funcionariosSupervisao);
+  Reg funcionarioComMenorSalarioSupervisao = funcionarioComMenorSalario(funcionariosSupervisao);
+
+  Reg funcionarioComMaiorSalarioOperacional = funcionarioComMaiorSalario(funcionariosOperacional);
+  Reg funcionarioComMenorSalarioOperacional = funcionarioComMenorSalario(funcionariosOperacional);
+
+  printf("\nFuncionario com maior salario na categoria Gerencia: %d - %s\n", funcionarioComMaiorSalarioGerencia.id, funcionarioComMaiorSalarioGerencia.nome);
+  printf("Funcionario com menor salario na categoria Gerencia: %d - %s\n", funcionarioComMenorSalarioGerencia.id, funcionarioComMenorSalarioGerencia.nome);
+
+  printf("\nFuncionario com maior salario na categoria Supervisao: %d - %s\n", funcionarioComMaiorSalarioSupervisao.id, funcionarioComMaiorSalarioSupervisao.nome);
+  printf("Funcionario com menor salario na categoria Supervisao: %d - %s\n", funcionarioComMenorSalarioSupervisao.id, funcionarioComMenorSalarioSupervisao.nome);
+
+  printf("\nFuncionario com maior salario na categoria Operacional: %d - %s\n", funcionarioComMaiorSalarioOperacional.id, funcionarioComMaiorSalarioOperacional.nome);
+  printf("Funcionario com menor salario na categoria Operacional: %d - %s\n", funcionarioComMenorSalarioOperacional.id, funcionarioComMenorSalarioOperacional.nome);
+}
