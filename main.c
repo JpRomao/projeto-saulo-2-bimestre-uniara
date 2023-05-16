@@ -744,14 +744,28 @@ double Menor_Salario(double a, double b)
 
 void Maior_Menor_Cat(int categoria, Reg *funcionarios, int quantidadeFuncionarios)
 {
-  int i = quantidadeFuncionarios - 1;
-  double maior = 0, menor = 1000000;
-  for (i = 0; i < quantidadeFuncionarios; i++)
+  int i;
+  double maior = SALARIO_MINIMO, menor = SALARIO_MAXIMO;
+  for (i = 0; i < quantidadeFuncionarios - 1; i++)
   {
     if ((funcionarios[i].categoria == categoria))
     {
       maior = Maior_Salario(funcionarios[i].salario, maior);
       menor = Menor_Salario(funcionarios[i].salario, menor);
+    }
+  }
+  for (i = 0; i < quantidadeFuncionarios - 1; i++)
+  {
+    if ((funcionarios[i].categoria == categoria))
+    {
+      if (maior == funcionarios[i].salario)
+      {
+        printf("\n%s e o funcionario com maior salario", funcionarios[i].nome);
+      }
+      if (menor == funcionarios[i].salario)
+      {
+        printf("\n%s e o funcionario com menor salario", funcionarios[i].nome);
+      }
     }
   }
   if (categoria == 1)
