@@ -38,6 +38,8 @@ void listarFuncionarios(Reg *funcionarios, int pagina, int numeroFuncionarios);
 void mostrarFuncionario(Reg funcionario);
 void menu();
 void ordenarPorNome(Reg *funcionarios);
+void totalSalariosPorCategoria(Reg *funcionarios);
+void mediaIdadePorCategoria(Reg *funcionarios);
 int gerarId();
 int cadastraIdade();
 int cadastraCategoria();
@@ -54,6 +56,7 @@ Reg *buscarFuncionarioPorNomeContendo(Reg *funcionarios, Reg *funcionariosEncont
 Reg *adicionarFuncionario(Reg *funcionarios, Reg novoFuncionario);
 Reg *gerarFuncionariosAleatorios(Reg *funcionarios);
 Reg *deletarFuncionario(Reg *funcionarios);
+
 Reg *nomeFuncionarioMaisNovo(Reg *funcionario);
 Reg *alterarFuncionario(Reg *funcionarios);
 /***/
@@ -119,7 +122,7 @@ void menuPrincipal(Reg *funcionarios, int jaFoiOrdenado)
       // maiorMenorSalarioPorCategoria(funcionarios);
       break;
     case 8:
-      // mediaIdadePorCategoria(funcionarios);
+      mediaIdadePorCategoria(funcionarios);
       break;
     case 9:
       quantidadeFuncionariosPorSalario(funcionarios);
@@ -135,7 +138,7 @@ void menuPrincipal(Reg *funcionarios, int jaFoiOrdenado)
       printf("Opcao invalida!\n");
       break;
     }
-  } while (opcao != 6);
+  } while (opcao != 11);
 
   free(funcionariosPesquisados);
 }
@@ -345,9 +348,9 @@ Reg *alterarFuncionario(Reg *funcionarios)
 
 void totalSalariosPorCategoria(Reg *funcionarios)
 {
-  double totalGerencia;
-  double totalSupervisao;
-  double totalOperacional;
+  double totalGerencia = 0;
+  double totalSupervisao = 0;
+  double totalOperacional = 0;
 
   for (int i = 0; i < quantidadeFuncionarios; i++)
   {
@@ -370,6 +373,44 @@ void totalSalariosPorCategoria(Reg *funcionarios)
   printf("Total de salarios categoria Gerencia: %.2lf\n", totalGerencia);
   printf("Total de salarios categoria Supervisao: %.2lf\n", totalSupervisao);
   printf("Total de salarios categoria Operacional: %.2lf\n", totalOperacional);
+}
+
+void mediaIdadePorCategoria(Reg *funcionarios)
+{
+  int totalGerencia = 0;
+  int totalSupervisao = 0;
+  int totalOperacional = 0;
+  int contGerencia = 0;
+  int contSupervisao = 0;
+  int contOperacional = 0;
+
+  for (int i = 0; i < quantidadeFuncionarios; i++)
+  {
+    switch (funcionarios[i].categoria)
+    {
+    case 1:
+      totalGerencia += funcionarios[i].idade;
+      contGerencia++;
+      break;
+
+    case 2:
+      totalSupervisao += funcionarios[i].idade;
+      contSupervisao++;
+      break;
+
+    case 3:
+      totalOperacional += funcionarios[i].idade;
+      contOperacional++;
+      break;
+    }
+  }
+  int mediaGerencia = totalGerencia / contGerencia;
+  int mediaSupervisao = totalSupervisao / contSupervisao;
+  int mediaOperacional = totalOperacional / contOperacional;
+
+  printf("Media de idade da categoria Gerencia: %d\n", mediaGerencia);
+  printf("Media de idade da categoria Supervisao: %d\n", mediaSupervisao);
+  printf("Media de idade da categoria Operacional: %d\n", mediaOperacional);
 }
 
 Reg *nomeFuncionarioMaisNovo(Reg *funcionarios)

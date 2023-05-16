@@ -6,8 +6,8 @@ RF
 [x] - Deve ser possível deletar um funcionário
 [x] - Deve ser possível procurar o funcionário com menor idade
 [x] - Deve ser possível alterar os dados de um funcionário
-[] - Deve ser possível listar o total dos salários por categoria
-[] - Deve ser possível conseguir a média de idade por categoria
+[x] - Deve ser possível listar o total dos salários por categoria
+[x] - Deve ser possível conseguir a média de idade por categoria
 [] - Deve ser possível conseguir o maior e menor salário por categoria
 [] - Deve ser possível conseguir a quantidade de funcionários que recebem salário mínimo
 
